@@ -34,7 +34,7 @@ public class PercentageTests
             Assert.That(exception.ActualValue, Is.EqualTo(value));
             Assert.That(exception.Message,
                 Is.EqualTo(
-                    $"Percentage value must be between 0 and 100 (Parameter 'value')\r\nActual value was {value}."));
+                    $"Percentage value must be between 0 and 100 (Parameter 'value'){Environment.NewLine}Actual value was {value}."));
         });
     }
 
