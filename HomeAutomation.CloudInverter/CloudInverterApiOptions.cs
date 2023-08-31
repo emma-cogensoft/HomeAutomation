@@ -1,6 +1,6 @@
 namespace HomeAutomation.CloudInverter;
 
-public class CloudInverterApiSettingsOptions
+public class CloudInverterApiOptions
 {
     public required string RequestTemplateUri { get; set; }
 }

@@ -1,6 +1,6 @@
 namespace HomeAutomation.LocalInverter;
 
-public class LocalInverterApiSettingsOptions
+public class LocalInverterApiOptions
 {
     public required string RequestUri { get; set; }
     public required string RequestBody { get; set; }

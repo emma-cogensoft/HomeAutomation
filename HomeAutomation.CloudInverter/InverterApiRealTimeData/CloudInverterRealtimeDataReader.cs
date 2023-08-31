@@ -7,10 +7,10 @@ namespace HomeAutomation.CloudInverter.InverterApiRealTimeData;
 public class CloudInverterRealtimeDataReader : IInverterRealtimeDataReader
 {
     private readonly ICloudInverterApiAccessor _httpAccessor;
-    private readonly CloudInverterApiSettingsOptions _options;
+    private readonly CloudInverterApiOptions _options;
 
     public CloudInverterRealtimeDataReader(ICloudInverterApiAccessor httpAccessor,
-        IOptions<CloudInverterApiSettingsOptions> options)
+        IOptions<CloudInverterApiOptions> options)
     {
         ArgumentNullException.ThrowIfNull(options);
         ArgumentNullException.ThrowIfNull(options.Value);

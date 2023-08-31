@@ -9,17 +9,17 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 
 builder.Services
-    .AddOptions<LocalInverterApiSettingsOptions>()
+    .AddOptions<LocalInverterApiOptions>()
     .Bind(builder.Configuration.GetSection("Services:LocalInverterApiSettingsOptions"))
     .ValidateDataAnnotations();
 
 builder.Services
-    .AddOptions<CloudInverterApiSettingsOptions>()
+    .AddOptions<CloudInverterApiOptions>()
     .Bind(builder.Configuration.GetSection("Services:CloudInverterApiSettingsOptions"))
     .ValidateDataAnnotations();
 
 builder.Services
-    .AddOptions<MetOfficeApiSettingsOptions>()
+    .AddOptions<MetOfficeApiOptions>()
     .Bind(builder.Configuration.GetSection("Services:MetOfficeApiSettingsOptions"))
     .ValidateDataAnnotations();
 

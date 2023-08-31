@@ -8,10 +8,10 @@ namespace HomeAutomation.LocalInverter.InverterApiRealTimeData;
 public class LocalInverterRealtimeDataReader : IInverterRealtimeDataReader
 {
     private readonly ILocalInverterApiAccessor _httpAccessor;
-    private readonly LocalInverterApiSettingsOptions _options;
+    private readonly LocalInverterApiOptions _options;
 
     public LocalInverterRealtimeDataReader(ILocalInverterApiAccessor httpAccessor,
-        IOptions<LocalInverterApiSettingsOptions> options)
+        IOptions<LocalInverterApiOptions> options)
     {
         ArgumentNullException.ThrowIfNull(options);
         ArgumentNullException.ThrowIfNull(options.Value);

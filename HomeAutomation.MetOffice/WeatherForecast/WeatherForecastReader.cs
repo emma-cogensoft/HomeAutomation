@@ -8,9 +8,9 @@ namespace HomeAutomation.MetOffice.WeatherForecast;
 public class WeatherForecastReader: IWeatherForecastReader
 {
     private readonly IWeatherForecastApiAccessor _httpAccessor;
-    private readonly MetOfficeApiSettingsOptions _options;
+    private readonly MetOfficeApiOptions _options;
 
-    public WeatherForecastReader(IWeatherForecastApiAccessor httpAccessor, IOptions<MetOfficeApiSettingsOptions> options)
+    public WeatherForecastReader(IWeatherForecastApiAccessor httpAccessor, IOptions<MetOfficeApiOptions> options)
     {
         _httpAccessor = httpAccessor;
         _options = options.Value;

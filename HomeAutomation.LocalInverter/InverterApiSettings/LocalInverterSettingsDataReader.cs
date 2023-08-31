@@ -11,9 +11,9 @@ namespace HomeAutomation.LocalInverter.InverterApiSettings;
 public class LocalInverterSettingsDataReader : IInverterSettingsDataReader
 {
     private readonly ILocalInverterApiAccessor _httpAccessor;
-    private readonly LocalInverterApiSettingsOptions _options;
+    private readonly LocalInverterApiOptions _options;
 
-    public LocalInverterSettingsDataReader(ILocalInverterApiAccessor httpAccessor, IOptions<LocalInverterApiSettingsOptions> options)
+    public LocalInverterSettingsDataReader(ILocalInverterApiAccessor httpAccessor, IOptions<LocalInverterApiOptions> options)
     {
         ArgumentNullException.ThrowIfNull(options);
         ArgumentNullException.ThrowIfNull(options.Value);
