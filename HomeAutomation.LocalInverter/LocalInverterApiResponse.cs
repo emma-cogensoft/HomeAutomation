@@ -3,7 +3,7 @@ using System.Text.Json.Serialization;
 
 namespace HomeAutomation.LocalInverter;
 
-internal class InverterLocalApiResponse
+internal class LocalInverterApiResponse
 {
     [JsonPropertyName("Data")] public JsonArray Data { get; set; } = new();
 }

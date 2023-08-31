@@ -1,3 +1,5 @@
+using System.Net.Http.Json;
+
 namespace HomeAutomation.MetOffice.HttpAccessor;
 
 public class WeatherForecastApiAccessor: IWeatherForecastApiAccessor
@@ -11,7 +13,7 @@ public class WeatherForecastApiAccessor: IWeatherForecastApiAccessor
         _httpClientFactory = httpClientFactory;
     }
     
-    public async Task<string> GetAsJsonStringAsync(Uri uri, CancellationToken cancellationToken)
+    public async Task<T> GetAsync<T>(Uri uri, CancellationToken cancellationToken)
     {
         ArgumentNullException.ThrowIfNull(uri);
         
@@ -22,9 +24,9 @@ public class WeatherForecastApiAccessor: IWeatherForecastApiAccessor
 
         httpResponseMessage.EnsureSuccessStatusCode();
         
-        var jsonResponse = await httpResponseMessage.Content.ReadAsStringAsync(cancellationToken);
+        var jsonResponse = await httpResponseMessage.Content.ReadFromJsonAsync<T>(cancellationToken: cancellationToken);
 
-        if (string.IsNullOrWhiteSpace(jsonResponse))
+        if (jsonResponse == null)
         {
             throw new WeatherForecastMetOfficeApiException("Could not read response from API");
         }

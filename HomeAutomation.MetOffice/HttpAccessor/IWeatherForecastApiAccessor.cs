@@ -2,5 +2,5 @@ namespace HomeAutomation.MetOffice.HttpAccessor;
 
 public interface IWeatherForecastApiAccessor
 {
-    Task<string> GetAsJsonStringAsync(Uri uri, CancellationToken cancellationToken);
+    Task<T> GetAsync<T>(Uri uri, CancellationToken cancellationToken);
 }

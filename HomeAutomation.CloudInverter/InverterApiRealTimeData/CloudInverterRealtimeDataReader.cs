@@ -23,7 +23,7 @@ public class CloudInverterRealtimeDataReader : IInverterRealtimeDataReader
     public async Task<InverterRealtimeData> GetInverterRealtimeDataAsync(CancellationToken cancellationToken)
     {
         var uri = TryBuildApiUri(_options.RequestTemplateUri, "getRealtimeInfo");
-        var response = await _httpAccessor.ReadAsync(uri, cancellationToken);
+        var response = await _httpAccessor.GetJsonAsync(uri, cancellationToken);
         var inverterData = response.Deserialize<CloudInverterRealtimeDataResponse>();
         if (inverterData == null) throw new CloudInverterException("Could not read inverter data");
 

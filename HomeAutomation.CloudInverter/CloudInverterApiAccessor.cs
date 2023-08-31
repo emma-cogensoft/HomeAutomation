@@ -1,3 +1,4 @@
+using System.Net.Http.Json;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 
@@ -14,7 +15,7 @@ public class CloudInverterApiAccessor: ICloudInverterApiAccessor
         _httpClientFactory = httpClientFactory;
     }
     
-    public async Task<JsonObject> ReadAsync(Uri uri, CancellationToken cancellationToken)
+    public async Task<JsonObject> GetJsonAsync(Uri uri, CancellationToken cancellationToken)
     {
         ArgumentNullException.ThrowIfNull(uri);
         
@@ -23,14 +24,13 @@ public class CloudInverterApiAccessor: ICloudInverterApiAccessor
         
         httpResponseMessage.EnsureSuccessStatusCode();
         
-        var jsonResponse = await httpResponseMessage.Content.ReadAsStringAsync(cancellationToken);
+        var jsonResponse = await httpResponseMessage.Content.ReadFromJsonAsync<JsonObject>(cancellationToken: cancellationToken);
 
-        if (string.IsNullOrWhiteSpace(jsonResponse))
+        if (jsonResponse == null)
         {
             throw new CloudInverterException("Could not read response from API");
         }
 
-        return JsonSerializer.Deserialize<JsonObject>(jsonResponse) 
-               ?? throw new CloudInverterException("Could not deserialize response from API");
+        return jsonResponse;
     }
 }

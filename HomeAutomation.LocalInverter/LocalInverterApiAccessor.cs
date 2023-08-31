@@ -1,3 +1,4 @@
+using System.Net.Http.Json;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 
@@ -24,15 +25,14 @@ public class LocalInverterApiAccessor: ILocalInverterApiAccessor
         
         httpResponseMessage.EnsureSuccessStatusCode();
         
-        var jsonResponse = await httpResponseMessage.Content.ReadAsStringAsync(cancellationToken);
+        var jsonResponse = await httpResponseMessage.Content.ReadFromJsonAsync<JsonObject>(cancellationToken: cancellationToken);
 
-        if (string.IsNullOrWhiteSpace(jsonResponse))
+        if (jsonResponse == null)
         {
             throw new LocalInverterApiException("Could not read response from API");
         }
 
-        return JsonSerializer.Deserialize<JsonObject>(jsonResponse) 
-               ?? throw new LocalInverterApiException("Could not deserialize response from API");
+        return jsonResponse;
     }
     
     public async Task<string> GetStringAsync(Uri uri, string body, CancellationToken cancellationToken)

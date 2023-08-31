@@ -26,7 +26,7 @@ public class LocalInverterRealtimeDataReader : IInverterRealtimeDataReader
         var uri = TryBuildApiUri(_options.RequestUri);
         var body = BuildApiBody("ReadRealTimeData");
         var response = await _httpAccessor.GetJsonAsync(uri, body, cancellationToken);
-        var batteryData = response.Deserialize<InverterLocalApiResponse>();
+        var batteryData = response.Deserialize<LocalInverterApiResponse>();
         if (batteryData == null) throw new LocalInverterApiException("Could not read battery data");
 
         return new InverterRealtimeData
@@ -50,7 +50,7 @@ public class LocalInverterRealtimeDataReader : IInverterRealtimeDataReader
     private string BuildApiBody(string requestName) =>
         _options.RequestBody.Replace("{RequestName}", requestName, StringComparison.OrdinalIgnoreCase);
 
-    private static int GetDataItem(InverterLocalApiResponse data, DataItem itemIndex, int defaultValueIfNull = 0) =>
+    private static int GetDataItem(LocalInverterApiResponse data, DataItem itemIndex, int defaultValueIfNull = 0) =>
         data.Data[(int)itemIndex]?.GetValue<int>() ?? defaultValueIfNull;
 
     private enum DataItem

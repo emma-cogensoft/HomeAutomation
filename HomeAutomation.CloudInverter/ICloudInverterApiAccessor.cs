@@ -4,5 +4,5 @@ namespace HomeAutomation.CloudInverter;
 
 public interface ICloudInverterApiAccessor
 {
-    Task<JsonObject> ReadAsync(Uri uri, CancellationToken cancellationToken);
+    Task<JsonObject> GetJsonAsync(Uri uri, CancellationToken cancellationToken);
 }

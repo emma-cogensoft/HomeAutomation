@@ -21,13 +21,11 @@ public class WeatherForecaster: IWeatherForecastReader
     {
         var uri = new Uri(_options.RequestUri);
         
-        var response = await _httpAccessor.GetAsJsonStringAsync(uri, cancellationToken);
+        var response = await _httpAccessor.GetAsync<RootObject>(uri, cancellationToken);
         
-        var result = JsonSerializer.Deserialize<RootObject>(response);
-        
-        if (result == null) throw new WeatherForecastMetOfficeApiException("Could not get forecast");
+        if (response == null) throw new WeatherForecastMetOfficeApiException("Could not get forecast");
 
-        var report = result.SiteRep.DV.Location.Period[0].Rep[0];
+        var report = response.SiteRep.DV.Location.Period[0].Rep[0];
         
         var weatherType = (WeatherType)Enum.Parse(typeof(WeatherType), report.W);
         
