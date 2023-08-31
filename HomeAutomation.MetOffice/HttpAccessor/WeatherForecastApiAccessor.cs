@@ -28,7 +28,7 @@ public class WeatherForecastApiAccessor: IWeatherForecastApiAccessor
 
         if (jsonResponse == null)
         {
-            throw new WeatherForecastMetOfficeApiException("Could not read response from API");
+            throw new MetOfficeApiException("Could not read response from API");
         }
 
         return jsonResponse;

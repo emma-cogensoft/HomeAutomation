@@ -1,6 +1,6 @@
-namespace HomeAutomation.MetOffice;
+namespace HomeAutomation.MetOffice.WeatherForecast;
 
-public enum MetOfficeWeatherTypes
+public enum MetOfficeWeatherType
 {
     TraceRain = -1,
     ClearNight = 0,
