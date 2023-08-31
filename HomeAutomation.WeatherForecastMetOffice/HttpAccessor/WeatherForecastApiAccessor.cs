@@ -18,11 +18,11 @@ public class WeatherForecastApiAccessor: IWeatherForecastApiAccessor
         var httpClient = _httpClientFactory.CreateClient();
         httpClient.DefaultRequestHeaders.Add("Accept", "application/json");
         
-        var httpResponseMessage = await httpClient.GetAsync(uri);
+        var httpResponseMessage = await httpClient.GetAsync(uri, cancellationToken);
 
         httpResponseMessage.EnsureSuccessStatusCode();
         
-        var jsonResponse = await httpResponseMessage.Content.ReadAsStringAsync();
+        var jsonResponse = await httpResponseMessage.Content.ReadAsStringAsync(cancellationToken);
 
         if (string.IsNullOrWhiteSpace(jsonResponse))
         {
