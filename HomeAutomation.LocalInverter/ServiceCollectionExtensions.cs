@@ -1,7 +1,7 @@
 using HomeAutomation.Application.Services.Inverter;
 using HomeAutomation.LocalInverter.ApiAccessor;
-using HomeAutomation.LocalInverter.InverterApiRealTimeData;
 using HomeAutomation.LocalInverter.InverterSettings;
+using HomeAutomation.LocalInverter.RealTimeData;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace HomeAutomation.LocalInverter;

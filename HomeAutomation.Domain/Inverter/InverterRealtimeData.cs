@@ -1,4 +1,4 @@
-namespace HomeAutomation.Application.Services.Inverter;
+namespace HomeAutomation.Domain.Inverter;
 
 public class InverterRealtimeData
 {

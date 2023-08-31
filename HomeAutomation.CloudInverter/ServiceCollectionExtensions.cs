@@ -1,6 +1,6 @@
 ﻿using HomeAutomation.Application.Services.Inverter;
 using HomeAutomation.CloudInverter.ApiAccessor;
-using HomeAutomation.CloudInverter.InverterApiRealTimeData;
+using HomeAutomation.CloudInverter.RealTimeData;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace HomeAutomation.CloudInverter;

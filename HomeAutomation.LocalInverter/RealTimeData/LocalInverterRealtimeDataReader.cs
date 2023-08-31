@@ -1,10 +1,11 @@
 using System.Text.Json;
 using HomeAutomation.Application.Services.Inverter;
 using HomeAutomation.Domain;
+using HomeAutomation.Domain.Inverter;
 using HomeAutomation.LocalInverter.ApiAccessor;
 using Microsoft.Extensions.Options;
 
-namespace HomeAutomation.LocalInverter.InverterApiRealTimeData;
+namespace HomeAutomation.LocalInverter.RealTimeData;
 
 public class LocalInverterRealtimeDataReader : IInverterRealtimeDataReader
 {

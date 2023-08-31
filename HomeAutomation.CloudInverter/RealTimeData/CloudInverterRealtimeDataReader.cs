@@ -1,9 +1,10 @@
 using System.Text.Json;
 using HomeAutomation.Application.Services.Inverter;
 using HomeAutomation.CloudInverter.ApiAccessor;
+using HomeAutomation.Domain.Inverter;
 using Microsoft.Extensions.Options;
 
-namespace HomeAutomation.CloudInverter.InverterApiRealTimeData;
+namespace HomeAutomation.CloudInverter.RealTimeData;
 
 public class CloudInverterRealtimeDataReader : IInverterRealtimeDataReader
 {
