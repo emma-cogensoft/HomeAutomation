@@ -44,7 +44,7 @@ public class PartiallyFullStateTests
         var exception = Assert.Throws<ArgumentOutOfRangeException>(() => new PartiallyFullState(batteryPercentCharged, 1000));
 
         // Assert
-        Assert.That(exception.Message, Is.EqualTo($"Percentage value must be between 0 and 100 (Parameter 'value')\r\nActual value was {batteryPercentCharged}."));
+        Assert.That(exception.Message, Is.EqualTo($"Percentage value must be between 0 and 100 (Parameter 'value'){Environment.NewLine}Actual value was {batteryPercentCharged}."));
     }
     
     [Test]
@@ -55,6 +55,6 @@ public class PartiallyFullStateTests
         var exception = Assert.Throws<ArgumentOutOfRangeException>(() => new PartiallyFullState(100, totalBatteryCapacity));
 
         // Assert
-        Assert.That(exception.Message, Is.EqualTo($"WattHours value must be greater than 0 (Parameter 'value')\r\nActual value was {totalBatteryCapacity}."));
+        Assert.That(exception.Message, Is.EqualTo($"WattHours value must be greater than 0 (Parameter 'value'){Environment.NewLine}Actual value was {totalBatteryCapacity}."));
     }
 }
