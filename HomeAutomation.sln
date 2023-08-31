@@ -6,7 +6,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HomeAutomation.Domain", "Ho
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HomeAutomation.CloudInverter", "HomeAutomation.CloudInverter\HomeAutomation.CloudInverter.csproj", "{366FE856-2AE3-4718-A366-FE95AEDD7269}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HomeAutomation.WeatherForecastMetOffice", "HomeAutomation.WeatherForecastMetOffice\HomeAutomation.WeatherForecastMetOffice.csproj", "{410D46E4-CDB4-4A77-A3EE-F5BB9AA6810F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HomeAutomation.MetOffice", "HomeAutomation.MetOffice\HomeAutomation.MetOffice.csproj", "{410D46E4-CDB4-4A77-A3EE-F5BB9AA6810F}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HomeAutomation.LocalInverter", "HomeAutomation.LocalInverter\HomeAutomation.LocalInverter.csproj", "{72A207A9-9ADB-4082-80F2-027FA9018278}"
 EndProject

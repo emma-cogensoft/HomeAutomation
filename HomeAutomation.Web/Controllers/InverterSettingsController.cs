@@ -22,7 +22,7 @@ public class InverterSettingsController : ControllerBase
     {
         var inverterSettings = await _mediator.Send(new GetInverterSettings());
         
-        return new InverterSettingsResponse(inverterSettings.TimeStamp, inverterSettings.CurrentSettingName, true);
+        return new InverterSettingsResponse(inverterSettings.TimeStamp, inverterSettings.CurrentWorkTypeName, true);
     }
 
     public record InverterSettingsResponse(DateTime TimeStamp, string CurrentSettingName, bool IsLoaded);
