@@ -4,7 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace HomeAutomation.WeatherForecastMetOffice;
 
-public static class ServicesExtensions
+public static class ServiceCollectionExtensions
 {
     public static void RegisterWeatherServices(this IServiceCollection services)
     {

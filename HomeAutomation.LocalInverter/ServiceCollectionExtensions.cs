@@ -5,7 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace HomeAutomation.LocalInverter;
 
-public static class ServicesExtensions
+public static class ServiceCollectionExtensions
 {
     public static void RegisterLocalInverterServices(this IServiceCollection services)
     {
