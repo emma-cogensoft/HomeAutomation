@@ -1,4 +1,4 @@
-namespace HomeAutomation.WeatherForecastMetOffice;
+namespace HomeAutomation.MetOffice;
 
 public class WeatherForecastMetOfficeApiException : Exception
 {

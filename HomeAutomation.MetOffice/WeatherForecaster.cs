@@ -1,10 +1,10 @@
 using System.Text.Json;
 using HomeAutomation.Application.Services.Weather;
 using HomeAutomation.Domain.Weather;
-using HomeAutomation.WeatherForecastMetOffice.HttpAccessor;
+using HomeAutomation.MetOffice.HttpAccessor;
 using Microsoft.Extensions.Options;
 
-namespace HomeAutomation.WeatherForecastMetOffice;
+namespace HomeAutomation.MetOffice;
 
 public class WeatherForecaster: IWeatherForecastReader
 {

@@ -1,8 +1,8 @@
 ﻿using HomeAutomation.Application.Services.Weather;
-using HomeAutomation.WeatherForecastMetOffice.HttpAccessor;
+using HomeAutomation.MetOffice.HttpAccessor;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace HomeAutomation.WeatherForecastMetOffice;
+namespace HomeAutomation.MetOffice;
 
 public static class ServiceCollectionExtensions
 {

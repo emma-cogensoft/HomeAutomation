@@ -1,4 +1,4 @@
-namespace HomeAutomation.WeatherForecastMetOffice;
+namespace HomeAutomation.MetOffice;
 
 public enum MetOfficeWeatherTypes
 {

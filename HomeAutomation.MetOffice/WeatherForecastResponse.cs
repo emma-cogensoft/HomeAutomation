@@ -1,5 +1,5 @@
 ﻿// ReSharper disable All
-namespace HomeAutomation.WeatherForecastMetOffice;
+namespace HomeAutomation.MetOffice;
 
 public class RootObject
 {

@@ -2,7 +2,7 @@ using System.Net.Http.Headers;
 using HomeAutomation.Application;
 using HomeAutomation.CloudInverter;
 using HomeAutomation.LocalInverter;
-using HomeAutomation.WeatherForecastMetOffice;
+using HomeAutomation.MetOffice;
 
 var builder = WebApplication.CreateBuilder(args);
 
