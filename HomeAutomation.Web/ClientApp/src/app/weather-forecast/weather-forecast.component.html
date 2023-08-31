@@ -1,0 +1,20 @@
+<p *ngIf="weather.isLoading"><em>Loading...</em></p>
+
+<span *ngIf="weather.isSunny">
+      <img ngSrc="assets/icons/sun-fill.svg" alt="Sunny"
+           height="60" width="60"/>
+    </span>
+
+<span *ngIf="!weather.isSunny">
+      <img ngSrc="assets/icons/cloud-fill.svg" alt="Cloudy"
+           height="60" width="60"/>
+    </span>
+
+<hr/>
+
+<app-battery></app-battery>
+
+<hr/>
+<p>Contains public sector information licensed under the Open Government Licence. <a
+  href="https://www.metoffice.gov.uk/services/data/datapoint/terms-and-conditions---datapoint" target="_blank">Met
+  Office</a></p>

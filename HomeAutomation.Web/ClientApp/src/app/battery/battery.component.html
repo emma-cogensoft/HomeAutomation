@@ -1,0 +1,59 @@
+<h1>Battery Level</h1>
+
+<p *ngIf="batteryData.isLoading"><em>Loading...</em></p>
+
+<div *ngIf="!batteryData.isLoading">
+  <p> {{ batteryData.percentageCharged }}% </p>
+  <p> {{ batteryData.batteryPowerUsageInW }}W </p>
+
+  <div *ngIf="batteryData.activityDescription == 'Charging'">
+    <p>Battery is charging</p>
+    <img ngSrc="assets/icons/arrow-up.svg" alt="Charging battery"
+         height="32" width="32"/>
+    <img *ngIf="batteryData.stateDescription == 'Full'"
+         ngSrc="assets/icons/battery-full.svg" alt="Full battery"
+         height="32" width="32"/>
+
+    <img *ngIf=" batteryData.stateDescription != 'Full'"
+         ngSrc="assets/icons/battery-charging.svg" alt="Charging battery"
+         height="32" width="32"/>
+
+    <p>Remaining charge until 100%: {{ batteryData.remainingBatteryCapacityInWh }}Wh</p>
+    <p>Time to charge battery at current rate: {{ batteryData.timeToCompleteInH }} hours</p>
+
+  </div>
+
+  <div *ngIf="batteryData.activityDescription == 'Discharging'">
+    <img ngSrc="assets/icons/arrow-down.svg" alt="Draining battery"
+         height="32" width="32"/>
+    <p>Battery is draining</p>
+
+    <img *ngIf="batteryData.stateDescription == 'Partially Full'"
+         ngSrc="assets/icons/battery-half.svg" alt="Partially full battery"
+         height="32" width="32"/>
+
+    <img *ngIf="batteryData.stateDescription == 'Empty'"
+         ngSrc="assets/icons/battery.svg" alt="Empty battery"
+         height="32" width="32"/>
+
+    <img *ngIf="batteryData.stateDescription == 'Full'"
+         ngSrc="assets/icons/battery-full.svg" alt="Full battery"
+         height="32" width="32"/>
+
+    <p>Remaining charge until 10%: {{ batteryData.remainingBatteryCapacityInWh }}Wh</p>
+    <p>Time to drain battery to 10% at current rate: {{ batteryData.timeToCompleteInH }}
+      hours
+      <span *ngIf="batteryData.timeToCompleteInH > 12">
+        <img ngSrc="assets/icons/check-circle.svg" alt="Ok"
+             height="32" width="32"/>
+      </span>
+      <span *ngIf="batteryData.timeToCompleteInH < 12">
+        <img ngSrc="assets/icons/exclamation-triangle.svg" alt="Not ok"
+             height="32" width="32"/>
+      </span>
+    </p>
+  </div>
+
+  <p>as at {{ batteryData.timeStamp }}</p>
+  <p>Battery size: {{ batteryData.totalBatteryCapacityInWh }}kWh</p>
+</div>

@@ -1,0 +1,12 @@
+<h1>Inverter Settings</h1>
+
+<p *ngIf="inverterData.isLoading"><em>Loading...</em></p>
+
+<div *ngIf="!inverterData.isLoading">
+  <p> {{ inverterData.currentSettingName }} </p>
+  <p>as at {{ inverterData.timeStamp }}</p>
+</div>
+
+
+
+
