@@ -1,6 +1,7 @@
 using System.Text.Json;
 using HomeAutomation.Application.Services.Inverter;
 using HomeAutomation.Domain;
+using HomeAutomation.LocalInverter.ApiAccessor;
 using Microsoft.Extensions.Options;
 
 namespace HomeAutomation.LocalInverter.InverterApiRealTimeData;

@@ -1,6 +1,6 @@
 namespace HomeAutomation.Domain.Inverter;
 
-public enum InverterSettingType
+public enum InverterWorkType
 {
     SelfUse,
     FeedInPriority,

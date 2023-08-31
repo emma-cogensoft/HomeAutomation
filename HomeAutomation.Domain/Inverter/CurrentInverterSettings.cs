@@ -4,8 +4,8 @@ namespace HomeAutomation.Domain.Inverter;
 
 public class CurrentInverterSettings
 {
-    public InverterSettingType CurrentSettingType { get; init; }
-    public string CurrentSettingName => CurrentSettingType.ToString();
+    public InverterWorkType CurrentWorkType { get; init; }
+    public string CurrentWorkTypeName => CurrentWorkType.ToString();
     
     public SelfUse SelfUseSettings { get; init; } = null!;
     public FeedInPriority FeedInPrioritySettings { get; init; } = null!;

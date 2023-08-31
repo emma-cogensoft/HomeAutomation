@@ -1,4 +1,4 @@
-namespace HomeAutomation.MetOffice.HttpAccessor;
+namespace HomeAutomation.MetOffice.ApiAccessor;
 
 public interface IWeatherForecastApiAccessor
 {

@@ -2,7 +2,7 @@ using System.Text.Json.Serialization;
 
 namespace HomeAutomation.CloudInverter.InverterApiRealTimeData;
 
-internal class InverterData
+internal class CloudInverterData
 {
     [JsonPropertyName("inverterSN")] public string? InverterSn { get; set; }
     [JsonPropertyName("sn")] public string? Sn { get; set; }

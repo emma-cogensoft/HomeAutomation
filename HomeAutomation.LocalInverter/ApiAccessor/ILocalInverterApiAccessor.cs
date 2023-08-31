@@ -1,6 +1,6 @@
 using System.Text.Json.Nodes;
 
-namespace HomeAutomation.LocalInverter;
+namespace HomeAutomation.LocalInverter.ApiAccessor;
 
 public interface ILocalInverterApiAccessor
 {

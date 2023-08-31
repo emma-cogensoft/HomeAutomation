@@ -1,8 +1,7 @@
 using System.Net.Http.Json;
-using System.Text.Json;
 using System.Text.Json.Nodes;
 
-namespace HomeAutomation.LocalInverter;
+namespace HomeAutomation.LocalInverter.ApiAccessor;
 
 public class LocalInverterApiAccessor: ILocalInverterApiAccessor
 {

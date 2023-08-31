@@ -1,6 +1,6 @@
 using HomeAutomation.Application.Services.Weather;
 using HomeAutomation.Domain.Weather;
-using HomeAutomation.MetOffice.HttpAccessor;
+using HomeAutomation.MetOffice.ApiAccessor;
 using Microsoft.Extensions.Options;
 
 namespace HomeAutomation.MetOffice.WeatherForecast;

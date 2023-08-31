@@ -1,4 +1,4 @@
-namespace HomeAutomation.LocalInverter.InverterApiSettings;
+namespace HomeAutomation.LocalInverter.InverterSettings;
 
 internal enum DataItem
 {

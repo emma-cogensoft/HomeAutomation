@@ -1,5 +1,5 @@
 ﻿using HomeAutomation.Application.Services.Weather;
-using HomeAutomation.MetOffice.HttpAccessor;
+using HomeAutomation.MetOffice.ApiAccessor;
 using HomeAutomation.MetOffice.WeatherForecast;
 using Microsoft.Extensions.DependencyInjection;
 

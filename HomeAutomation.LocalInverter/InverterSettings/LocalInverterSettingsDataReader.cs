@@ -4,9 +4,10 @@ using HomeAutomation.Application.Services.Inverter;
 using HomeAutomation.Domain;
 using HomeAutomation.Domain.Inverter;
 using HomeAutomation.Domain.ValueObjects;
+using HomeAutomation.LocalInverter.ApiAccessor;
 using Microsoft.Extensions.Options;
 
-namespace HomeAutomation.LocalInverter.InverterApiSettings;
+namespace HomeAutomation.LocalInverter.InverterSettings;
 
 public class LocalInverterSettingsDataReader : IInverterSettingsDataReader
 {
@@ -35,7 +36,7 @@ public class LocalInverterSettingsDataReader : IInverterSettingsDataReader
 
         return new CurrentInverterSettings
         {
-            CurrentSettingType = MapSettings(GetCurrentlyEnabledSetting(inverterData)),
+            CurrentWorkType = MapSettings(GetCurrentlySelectedWorkType(inverterData)),
             SelfUseSettings = new CurrentInverterSettings.SelfUse(
                 GetBoolDataItem(inverterData, DataItem.ChargeFromGridIsEnabled),
                 GetIntDataItem(inverterData, DataItem.ChargeFromGridMaxBatteryPercent, -1),
@@ -82,16 +83,16 @@ public class LocalInverterSettingsDataReader : IInverterSettingsDataReader
     private static TimeOfDay GetTimeOfDayDataItem(JsonArray data, DataItem itemIndex) =>
         data[(int)itemIndex]?.GetValue<int>() ?? TimeOfDay.Empty;
 
-    private static CurrentlyEnabledSetting GetCurrentlyEnabledSetting(JsonArray data) =>
-        (CurrentlyEnabledSetting)(data[(int)DataItem.CurrentlyEnabledSetting]?.GetValue<int>() ?? 0);
+    private static SelectedWorkType GetCurrentlySelectedWorkType(JsonArray data) =>
+        (SelectedWorkType)(data[(int)DataItem.CurrentlyEnabledSetting]?.GetValue<int>() ?? 0);
 
-    private static InverterSettingType MapSettings(CurrentlyEnabledSetting setting) => 
+    private static InverterWorkType MapSettings(SelectedWorkType setting) => 
         setting switch
         {
-            CurrentlyEnabledSetting.FeedInPriority => InverterSettingType.FeedInPriority,
-            CurrentlyEnabledSetting.Manual => InverterSettingType.Manual,
-            CurrentlyEnabledSetting.SelfUse => InverterSettingType.SelfUse,
-            CurrentlyEnabledSetting.BackupMode => InverterSettingType.BackupMode,
+            SelectedWorkType.FeedInPriority => InverterWorkType.FeedInPriority,
+            SelectedWorkType.Manual => InverterWorkType.Manual,
+            SelectedWorkType.SelfUse => InverterWorkType.SelfUse,
+            SelectedWorkType.BackupMode => InverterWorkType.BackupMode,
             _ => throw new LocalInverterApiException("Could not read current inverter setting type")
         };
 }

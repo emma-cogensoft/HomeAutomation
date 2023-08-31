@@ -1,7 +1,7 @@
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
 
-namespace HomeAutomation.LocalInverter;
+namespace HomeAutomation.LocalInverter.InverterApiRealTimeData;
 
 internal class LocalInverterApiResponse
 {

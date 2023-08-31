@@ -1,6 +1,6 @@
 using System.Text.Json.Nodes;
 
-namespace HomeAutomation.CloudInverter;
+namespace HomeAutomation.CloudInverter.ApiAccessor;
 
 public interface ICloudInverterApiAccessor
 {

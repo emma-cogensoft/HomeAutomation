@@ -1,6 +1,6 @@
 using System.Net.Http.Json;
 
-namespace HomeAutomation.MetOffice.HttpAccessor;
+namespace HomeAutomation.MetOffice.ApiAccessor;
 
 public class WeatherForecastApiAccessor: IWeatherForecastApiAccessor
 {
