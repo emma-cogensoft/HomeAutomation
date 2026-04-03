@@ -18,7 +18,7 @@ public class CloudInverterApiAccessor: ICloudInverterApiAccessor
     {
         ArgumentNullException.ThrowIfNull(uri);
         
-        var httpClient = _httpClientFactory.CreateClient();
+        var httpClient = _httpClientFactory.CreateClient(ServiceCollectionExtensions.HttpClientName);
         var httpResponseMessage = await httpClient.GetAsync(uri, cancellationToken);
         
         httpResponseMessage.EnsureSuccessStatusCode();

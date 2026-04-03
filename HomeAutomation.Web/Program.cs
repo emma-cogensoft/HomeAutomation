@@ -1,4 +1,3 @@
-using System.Net.Http.Headers;
 using HomeAutomation.Application;
 using HomeAutomation.CloudInverter;
 using HomeAutomation.LocalInverter;
@@ -24,12 +23,6 @@ builder.Services
     .ValidateDataAnnotations();
 
 builder.Services.AddControllersWithViews();
-
-builder.Services.AddHttpClient<HttpClient>(c =>
-{
-    c.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-    c.Timeout = TimeSpan.FromSeconds(30);
-});
 
 builder.Services.AddProblemDetails();
 

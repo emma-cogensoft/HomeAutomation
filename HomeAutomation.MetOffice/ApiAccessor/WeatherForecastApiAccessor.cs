@@ -17,8 +17,7 @@ public class WeatherForecastApiAccessor: IWeatherForecastApiAccessor
     {
         ArgumentNullException.ThrowIfNull(uri);
         
-        var httpClient = _httpClientFactory.CreateClient();
-        httpClient.DefaultRequestHeaders.Add("Accept", "application/json");
+        var httpClient = _httpClientFactory.CreateClient(ServiceCollectionExtensions.HttpClientName);
         
         var httpResponseMessage = await httpClient.GetAsync(uri, cancellationToken);
 
