@@ -63,7 +63,7 @@ public class LocalInverterSettingsDataReader : IInverterSettingsDataReader
                     GetTimeOfDayDataItem(inverterData, DataItem.ChargeAndDischargePeriod2AllowedDischargePeriodEndTime)
                 )
             ),
-            TimeStamp = TimeProvider.UtcNow // TODO replace with timestamp from inverter
+            TimeStamp = HomeAutomation.Domain.TimeProvider.UtcNow // TODO replace with timestamp from inverter
         };
     }
 
