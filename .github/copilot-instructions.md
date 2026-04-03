@@ -39,7 +39,14 @@ Tests        → NUnit tests for Domain project only
 
 At runtime, **only one inverter project is wired up** (either Cloud or Local), controlled by DI registration in `Program.cs`.
 
-## Key Conventions
+## Workflow
+
+### Branching & Issues
+- **Always** create a new branch for each piece of work, named `feature/issue-{number}-{short-description}` (e.g. `feature/issue-11-dotnet8-upgrade`)
+- Every branch must be linked to a GitHub issue
+- Commit messages must include `Closes #{issue-number}` so the issue is closed automatically when the PR is merged
+- Never commit directly to `main`
+
 
 ### CQRS with MediatR — queries only
 All API endpoints go through a MediatR query. There are currently no commands. A new feature requires:
