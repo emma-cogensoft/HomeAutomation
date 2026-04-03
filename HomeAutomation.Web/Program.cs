@@ -22,6 +22,10 @@ builder.Services
     .Bind(builder.Configuration.GetSection("Services:OpenMeteoApiSettingsOptions"))
     .ValidateDataAnnotations();
 
+builder.Services
+    .AddOptions<HomeAutomation.Application.BatteryData.BatteryOptions>()
+    .Bind(builder.Configuration.GetSection("Services:BatteryOptions"));
+
 builder.Services.AddControllersWithViews();
 
 builder.Services.AddProblemDetails();

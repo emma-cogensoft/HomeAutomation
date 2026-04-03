@@ -17,7 +17,7 @@ public class BatteryInfoTests
     public void Create_WhenBatteryFullAndPowerUsageIsPositive_HasFullStateAndChargingActivity(int batteryPowerUsage, int batteryPowerPercentage)
     {
         // Act
-        var sut = new BatteryInfo(batteryPowerUsage, batteryPowerPercentage);
+        var sut = new BatteryInfo(batteryPowerUsage, batteryPowerPercentage, 11600);
         
         // Assert
         Assert.Multiple(() =>
@@ -34,7 +34,7 @@ public class BatteryInfoTests
     public void Create_WhenBatteryEmptyAndPowerUsageIsPositive_HasEmptyStateAndChargingActivity(int batteryPowerUsage, int batteryPowerPercentage)
     {
         // Act
-        var sut = new BatteryInfo(batteryPowerUsage, batteryPowerPercentage);
+        var sut = new BatteryInfo(batteryPowerUsage, batteryPowerPercentage, 11600);
         
         // Assert
         Assert.Multiple(() =>
@@ -51,7 +51,7 @@ public class BatteryInfoTests
     public void Create_WhenBatteryHalfFullAndPowerUsageIsPositive_HasHalfFullStateAndChargingActivity(int batteryPowerUsage, int batteryPowerPercentage)
     {
         // Act
-        var sut = new BatteryInfo(batteryPowerUsage, batteryPowerPercentage);
+        var sut = new BatteryInfo(batteryPowerUsage, batteryPowerPercentage, 11600);
         
         // Assert
         Assert.Multiple(() =>
@@ -71,7 +71,7 @@ public class BatteryInfoTests
     public void Create_WhenBatteryFullAndPowerUsageIsNegative_HasFullStateAndDischargingActivity(int batteryPowerUsage, int batteryPowerPercentage)
     {
         // Act
-        var sut = new BatteryInfo(batteryPowerUsage, batteryPowerPercentage);
+        var sut = new BatteryInfo(batteryPowerUsage, batteryPowerPercentage, 11600);
         
         // Assert
         Assert.Multiple(() =>
@@ -88,7 +88,7 @@ public class BatteryInfoTests
     public void Create_WhenBatteryEmptyAndPowerUsageIsNegative_HasEmptyStateAndDischargingActivity(int batteryPowerUsage, int batteryPowerPercentage)
     {
         // Act
-        var sut = new BatteryInfo(batteryPowerUsage, batteryPowerPercentage);
+        var sut = new BatteryInfo(batteryPowerUsage, batteryPowerPercentage, 11600);
         
         // Assert
         Assert.Multiple(() =>
@@ -105,7 +105,7 @@ public class BatteryInfoTests
     public void Create_WhenBatteryHalfFullAndPowerUsageIsNegative_HasHalfFullStateAndDischargingActivity(int batteryPowerUsage, int batteryPowerPercentage)
     {
         // Act
-        var sut = new BatteryInfo(batteryPowerUsage, batteryPowerPercentage);
+        var sut = new BatteryInfo(batteryPowerUsage, batteryPowerPercentage, 11600);
         
         // Assert
         Assert.Multiple(() =>
