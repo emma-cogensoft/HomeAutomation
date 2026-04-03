@@ -19,8 +19,8 @@ builder.Services
     .ValidateDataAnnotations();
 
 builder.Services
-    .AddOptions<MetOfficeApiOptions>()
-    .Bind(builder.Configuration.GetSection("Services:MetOfficeApiSettingsOptions"))
+    .AddOptions<OpenMeteoApiOptions>()
+    .Bind(builder.Configuration.GetSection("Services:OpenMeteoApiSettingsOptions"))
     .ValidateDataAnnotations();
 
 builder.Services.AddControllersWithViews();
