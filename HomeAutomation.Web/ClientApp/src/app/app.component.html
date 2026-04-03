@@ -1,6 +1,6 @@
 <body>
-  <app-nav-menu></app-nav-menu>
-  <main class="container">
+  <app-nav-menu *ngIf="showNav"></app-nav-menu>
+  <main [class.container]="showNav">
     <router-outlet></router-outlet>
   </main>
 </body>
