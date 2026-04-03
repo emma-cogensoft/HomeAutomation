@@ -19,7 +19,7 @@ public class LocalInverterApiAccessor: ILocalInverterApiAccessor
         ArgumentNullException.ThrowIfNull(uri);
         ArgumentNullException.ThrowIfNull(body);
         
-        var httpClient = _httpClientFactory.CreateClient();
+        var httpClient = _httpClientFactory.CreateClient(ServiceCollectionExtensions.HttpClientName);
         var httpResponseMessage = await httpClient.PostAsync(uri, new StringContent(body), cancellationToken);
         
         httpResponseMessage.EnsureSuccessStatusCode();
@@ -39,7 +39,7 @@ public class LocalInverterApiAccessor: ILocalInverterApiAccessor
         ArgumentNullException.ThrowIfNull(uri);
         ArgumentNullException.ThrowIfNull(body);
         
-        var httpClient = _httpClientFactory.CreateClient();
+        var httpClient = _httpClientFactory.CreateClient(ServiceCollectionExtensions.HttpClientName);
         var httpResponseMessage = await httpClient.PostAsync(uri, new StringContent(body), cancellationToken);
         
         httpResponseMessage.EnsureSuccessStatusCode();
