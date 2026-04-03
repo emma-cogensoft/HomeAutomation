@@ -1,4 +1,4 @@
-import { Component, Inject, inject } from '@angular/core';
+import { ChangeDetectorRef, Component, Inject, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
 @Component({
@@ -9,12 +9,13 @@ import { HttpClient } from '@angular/common/http';
 export class BatteryComponent {
   public batteryData: Battery = <Battery>{ isLoading: true };
 
-  constructor(@Inject('BASE_URL') baseUrl: string) {
+  constructor(@Inject('BASE_URL') baseUrl: string, private cdr: ChangeDetectorRef) {
     const http = inject(HttpClient);
     http.get<Battery>(baseUrl + 'api/battery').subscribe({
       next: (result: Battery) => {
         this.batteryData = result;
         this.batteryData.isLoading = false;
+        this.cdr.markForCheck();
       },
       error: (error: unknown) => console.error(error)
     });

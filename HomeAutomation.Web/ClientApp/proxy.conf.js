@@ -1,7 +1,4 @@
-const { env } = require('process');
-
-const target = env.ASPNETCORE_HTTPS_PORT ? `https://localhost:${env.ASPNETCORE_HTTPS_PORT}` :
-  env.ASPNETCORE_URLS ? env.ASPNETCORE_URLS.split(';')[0] : 'http://localhost:62865';
+const target = 'http://localhost:5165';
 
 const PROXY_CONFIG = [
   {
@@ -10,7 +7,8 @@ const PROXY_CONFIG = [
       "/api/forecast",
       "/api/invertersettings"
    ],
-    proxyTimeout: 10000,
+    proxyTimeout: 30000,
+    timeout: 30000,
     target: target,
     secure: false,
     headers: {

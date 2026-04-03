@@ -1,4 +1,4 @@
-import { Component, Inject, inject } from '@angular/core';
+import { ChangeDetectorRef, Component, Inject, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
 @Component({
@@ -9,10 +9,13 @@ import { HttpClient } from '@angular/common/http';
 export class WeatherForecastComponent {
   public weather: WeatherForecast = <WeatherForecast>{ isLoading: true, isSunny: false };
 
-  constructor(@Inject('BASE_URL') baseUrl: string) {
+  constructor(@Inject('BASE_URL') baseUrl: string, private cdr: ChangeDetectorRef) {
     const http = inject(HttpClient);
     http.get<WeatherForecast>(baseUrl + 'api/forecast').subscribe({
-      next: (result: WeatherForecast) => { this.weather = result; },
+      next: (result: WeatherForecast) => {
+        this.weather = result;
+        this.cdr.markForCheck();
+      },
       error: (error: unknown) => console.error(error)
     });
   }
