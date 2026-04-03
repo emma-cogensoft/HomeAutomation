@@ -25,7 +25,13 @@ builder.Services
 
 builder.Services.AddControllersWithViews();
 
-builder.Services.AddHttpClient<HttpClient>(c => c.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json")));
+builder.Services.AddHttpClient<HttpClient>(c =>
+{
+    c.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+    c.Timeout = TimeSpan.FromSeconds(30);
+});
+
+builder.Services.AddProblemDetails();
 
 builder.Services.RegisterApplicationServices();
 builder.Services.RegisterCloudInverterServices();
@@ -35,6 +41,8 @@ builder.Services.RegisterWeatherServices();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
+app.UseExceptionHandler("/error");
+
 if (!app.Environment.IsDevelopment())
 {
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.

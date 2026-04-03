@@ -40,7 +40,7 @@ public class LocalInverterRealtimeDataReader : IInverterRealtimeDataReader
             FeedIn = GetDataItem(batteryData, DataItem.FeedIn, -1),
             HomeUsage = GetDataItem(batteryData, DataItem.HomeUsage, -1),
             SolarInput = GetDataItem(batteryData, DataItem.SolarInput, -1),
-            TimeStamp = TimeProvider.UtcNow,
+            TimeStamp = HomeAutomation.Domain.TimeProvider.UtcNow,
             Source = "LocalInverter"
         };
     }
