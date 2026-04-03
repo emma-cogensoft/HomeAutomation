@@ -30,6 +30,8 @@ builder.Services.AddControllersWithViews();
 
 builder.Services.AddProblemDetails();
 
+builder.Services.AddHealthChecks();
+
 builder.Services.RegisterApplicationServices();
 builder.Services.RegisterCloudInverterServices();
 builder.Services.RegisterLocalInverterServices();
@@ -48,6 +50,8 @@ if (!app.Environment.IsDevelopment())
 app.UseStaticFiles();
 app.UseRouting();
 
+
+app.MapHealthChecks("/health");
 
 app.MapControllerRoute(
     name: "default",
