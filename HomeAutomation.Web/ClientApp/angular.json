@@ -15,13 +15,13 @@
       "prefix": "app",
       "architect": {
         "build": {
-          "builder": "@angular-devkit/build-angular:browser",
+          "builder": "@angular-devkit/build-angular:application",
           "options": {
             "progress": false,
             "outputPath": "dist",
             "index": "src/index.html",
-            "main": "src/main.ts",
-            "polyfills": "src/polyfills.ts",
+            "browser": "src/main.ts",
+            "polyfills": ["src/polyfills.ts"],
             "tsConfig": "tsconfig.app.json",
             "allowedCommonJsDependencies": [
               "oidc-client"
@@ -58,12 +58,8 @@
               "outputHashing": "all"
             },
             "development": {
-              "buildOptimizer": false,
               "optimization": false,
-              "vendorChunk": true,
-              "extractLicenses": false,
-              "sourceMap": true,
-              "namedChunks": true
+              "sourceMap": true
             }
           },
           "defaultConfiguration": "production"
@@ -72,10 +68,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "browserTarget": "HomeAutomation.Web:build:production"
+              "buildTarget": "HomeAutomation.Web:build:production"
             },
             "development": {
-              "browserTarget": "HomeAutomation.Web:build:development",
+              "buildTarget": "HomeAutomation.Web:build:development",
               "proxyConfig": "proxy.conf.js"
             }
           },
@@ -132,7 +128,6 @@
       }
     }
   },
-  "defaultProject": "HomeAutomation.Web",
   "cli": {
     "analytics": false
   }
