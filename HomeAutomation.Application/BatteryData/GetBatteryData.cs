@@ -4,9 +4,11 @@ using MediatR;
 
 namespace HomeAutomation.Application.BatteryData;
 
-public class GetBatteryData : IRequest<BatteryInfo>
+public record BatteryDataResult(BatteryInfo BatteryInfo, string DataSource);
+
+public class GetBatteryData : IRequest<BatteryDataResult>
 {
-    internal class GetBatteryDataHandler : IRequestHandler<GetBatteryData, BatteryInfo>
+    internal class GetBatteryDataHandler : IRequestHandler<GetBatteryData, BatteryDataResult>
     {
         private readonly IInverterRealtimeDataReader _inverterRealtimeDataReader;
 
@@ -15,14 +17,14 @@ public class GetBatteryData : IRequest<BatteryInfo>
             _inverterRealtimeDataReader = inverterRealtimeDataReader;
         }
 
-        public async Task<BatteryInfo> Handle(GetBatteryData request, CancellationToken cancellationToken)
+        public async Task<BatteryDataResult> Handle(GetBatteryData request, CancellationToken cancellationToken)
         {
             var batteryRealtimeData = await _inverterRealtimeDataReader.GetInverterRealtimeDataAsync(cancellationToken);
 
             var batteryInfo = new BatteryInfo((int)batteryRealtimeData.BatteryPowerUsage,
                 (int)batteryRealtimeData.BatteryPercentage);
 
-            return batteryInfo;
+            return new BatteryDataResult(batteryInfo, batteryRealtimeData.Source);
         }
     }
 }

@@ -24,7 +24,7 @@ public static class ServiceCollectionExtensions
             options.CircuitBreaker.SamplingDuration = TimeSpan.FromSeconds(60);
         });
 
-        services.AddScoped<IInverterRealtimeDataReader, CloudInverterRealtimeDataReader>();
+        services.AddKeyedScoped<IInverterRealtimeDataReader, CloudInverterRealtimeDataReader>("cloud");
         services.AddScoped<ICloudInverterApiAccessor, CloudInverterApiAccessor>();
     }
 }

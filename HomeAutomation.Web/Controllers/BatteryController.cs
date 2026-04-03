@@ -25,21 +25,22 @@ public class BatteryController : ControllerBase
             var batteryInfo = await _mediator.Send(new GetBatteryData());
 
             _logger.LogDebug("Battery data retrieved: {PercentageCharged}% charged, source: {Source}",
-                batteryInfo.BatteryState.PercentageCharged, batteryInfo.BatteryState.TimeStamp);
+                batteryInfo.BatteryInfo.BatteryState.PercentageCharged, batteryInfo.DataSource);
 
             return Ok(new BatteryResponse
             {
-                StateDescription = batteryInfo.BatteryState.Description,
-                ActivityDescription = batteryInfo.BatteryActivity.Description,
-                TimeToCompleteInH = batteryInfo.BatteryActivity.TimeToComplete,
-                PercentageCharged = batteryInfo.BatteryState.PercentageCharged,
-                PercentageUncharged = batteryInfo.BatteryState.PercentageUncharged,
-                AvailablePercentageCharged = batteryInfo.BatteryState.AvailablePercentageCharged,
-                TotalBatteryCapacityInWh = batteryInfo.BatteryCapacity,
-                AvailableChargeInBattery = batteryInfo.BatteryState.AvailableChargeInBattery,
-                RemainingBatteryCapacityInWh = batteryInfo.BatteryState.RemainingBatteryCapacity,
-                BatteryPowerUsageInW = batteryInfo.BatteryActivity.BatteryPowerUsage,
-                TimeStamp = batteryInfo.BatteryState.TimeStamp
+                StateDescription = batteryInfo.BatteryInfo.BatteryState.Description,
+                ActivityDescription = batteryInfo.BatteryInfo.BatteryActivity.Description,
+                TimeToCompleteInH = batteryInfo.BatteryInfo.BatteryActivity.TimeToComplete,
+                PercentageCharged = batteryInfo.BatteryInfo.BatteryState.PercentageCharged,
+                PercentageUncharged = batteryInfo.BatteryInfo.BatteryState.PercentageUncharged,
+                AvailablePercentageCharged = batteryInfo.BatteryInfo.BatteryState.AvailablePercentageCharged,
+                TotalBatteryCapacityInWh = batteryInfo.BatteryInfo.BatteryCapacity,
+                AvailableChargeInBattery = batteryInfo.BatteryInfo.BatteryState.AvailableChargeInBattery,
+                RemainingBatteryCapacityInWh = batteryInfo.BatteryInfo.BatteryState.RemainingBatteryCapacity,
+                BatteryPowerUsageInW = batteryInfo.BatteryInfo.BatteryActivity.BatteryPowerUsage,
+                TimeStamp = batteryInfo.BatteryInfo.BatteryState.TimeStamp,
+                DataSource = batteryInfo.DataSource
             });
         }
         catch (Exception ex)
@@ -62,5 +63,6 @@ public class BatteryController : ControllerBase
         public int RemainingBatteryCapacityInWh { get; init; }
         public int BatteryPowerUsageInW { get; init; }
         public DateTime TimeStamp { get; init; }
+        public string DataSource { get; init; } = string.Empty;
     }
 }

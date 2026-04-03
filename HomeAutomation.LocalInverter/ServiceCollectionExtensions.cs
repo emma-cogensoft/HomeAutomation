@@ -16,17 +16,19 @@ public static class ServiceCollectionExtensions
         services.AddHttpClient(HttpClientName, c =>
         {
             c.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
-            c.Timeout = TimeSpan.FromSeconds(10);
+            c.Timeout = TimeSpan.FromSeconds(5);
         })
         .AddStandardResilienceHandler(options =>
         {
-            // Local network: fewer retries with shorter delays
-            options.Retry.MaxRetryAttempts = 2;
+            // Local network: fail fast so the proxy doesn't time out
+            options.TotalRequestTimeout.Timeout = TimeSpan.FromSeconds(8);
+            options.AttemptTimeout.Timeout = TimeSpan.FromSeconds(3);
+            options.Retry.MaxRetryAttempts = 1;
             options.Retry.Delay = TimeSpan.FromMilliseconds(500);
             options.CircuitBreaker.SamplingDuration = TimeSpan.FromSeconds(30);
         });
 
-        services.AddScoped<IInverterRealtimeDataReader, LocalInverterRealtimeDataReader>();
+        services.AddKeyedScoped<IInverterRealtimeDataReader, LocalInverterRealtimeDataReader>("local");
         services.AddScoped<IInverterSettingsDataReader, LocalInverterSettingsDataReader>();
         services.AddScoped<ILocalInverterApiAccessor, LocalInverterApiAccessor>();
     }
