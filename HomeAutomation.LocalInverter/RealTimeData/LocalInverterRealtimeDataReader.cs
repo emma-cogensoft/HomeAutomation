@@ -3,6 +3,7 @@ using HomeAutomation.Application.Services.Inverter;
 using HomeAutomation.Domain;
 using HomeAutomation.Domain.Inverter;
 using HomeAutomation.LocalInverter.ApiAccessor;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
 namespace HomeAutomation.LocalInverter.RealTimeData;
@@ -11,9 +12,11 @@ public class LocalInverterRealtimeDataReader : IInverterRealtimeDataReader
 {
     private readonly ILocalInverterApiAccessor _httpAccessor;
     private readonly LocalInverterApiOptions _options;
+    private readonly ILogger<LocalInverterRealtimeDataReader> _logger;
 
     public LocalInverterRealtimeDataReader(ILocalInverterApiAccessor httpAccessor,
-        IOptions<LocalInverterApiOptions> options)
+        IOptions<LocalInverterApiOptions> options,
+        ILogger<LocalInverterRealtimeDataReader> logger)
     {
         ArgumentNullException.ThrowIfNull(options);
         ArgumentNullException.ThrowIfNull(options.Value);
@@ -21,17 +24,20 @@ public class LocalInverterRealtimeDataReader : IInverterRealtimeDataReader
 
         _options = options.Value;
         _httpAccessor = httpAccessor;
+        _logger = logger;
     }
 
     public async Task<InverterRealtimeData> GetInverterRealtimeDataAsync(CancellationToken cancellationToken)
     {
         var uri = TryBuildApiUri(_options.RequestUri);
         var body = BuildApiBody("ReadRealTimeData");
+        _logger.LogDebug("Requesting local inverter realtime data from {Uri}", uri);
+
         var response = await _httpAccessor.GetJsonAsync(uri, body, cancellationToken);
         var batteryData = response.Deserialize<LocalInverterApiResponse>();
         if (batteryData == null) throw new LocalInverterApiException("Could not read battery data");
 
-        return new InverterRealtimeData
+        var result = new InverterRealtimeData
         {
             BatteryPercentage = GetDataItem(batteryData, DataItem.BatteryPercentage, -1),
             BatteryPowerUsage = GetDataItem(batteryData, DataItem.BatteryPowerUsage) > 40000
@@ -43,6 +49,11 @@ public class LocalInverterRealtimeDataReader : IInverterRealtimeDataReader
             TimeStamp = HomeAutomation.Domain.TimeProvider.UtcNow,
             Source = "LocalInverter"
         };
+
+        _logger.LogDebug("Local inverter data: battery {Battery}%, solar {Solar}W, feedIn {FeedIn}W",
+            result.BatteryPercentage, result.SolarInput, result.FeedIn);
+
+        return result;
     }
 
     private static Uri TryBuildApiUri(string maybeUri) => Uri.TryCreate(maybeUri, UriKind.Absolute, out var uri)

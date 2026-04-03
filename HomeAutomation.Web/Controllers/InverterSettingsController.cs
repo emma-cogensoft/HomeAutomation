@@ -18,11 +18,21 @@ public class InverterSettingsController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<InverterSettingsResponse> GetAsync()
+    public async Task<IActionResult> GetAsync()
     {
-        var inverterSettings = await _mediator.Send(new GetInverterSettings());
-        
-        return new InverterSettingsResponse(inverterSettings.TimeStamp, inverterSettings.CurrentWorkTypeName, true);
+        try
+        {
+            var inverterSettings = await _mediator.Send(new GetInverterSettings());
+
+            _logger.LogDebug("Inverter settings retrieved: {CurrentSetting}", inverterSettings.CurrentWorkTypeName);
+
+            return Ok(new InverterSettingsResponse(inverterSettings.TimeStamp, inverterSettings.CurrentWorkTypeName, true));
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Failed to retrieve inverter settings");
+            return StatusCode(503, "Inverter settings are temporarily unavailable.");
+        }
     }
 
     public record InverterSettingsResponse(DateTime TimeStamp, string CurrentSettingName, bool IsLoaded);

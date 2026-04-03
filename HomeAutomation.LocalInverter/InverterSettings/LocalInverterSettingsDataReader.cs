@@ -5,6 +5,7 @@ using HomeAutomation.Domain;
 using HomeAutomation.Domain.Inverter;
 using HomeAutomation.Domain.ValueObjects;
 using HomeAutomation.LocalInverter.ApiAccessor;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
 namespace HomeAutomation.LocalInverter.InverterSettings;
@@ -13,8 +14,11 @@ public class LocalInverterSettingsDataReader : IInverterSettingsDataReader
 {
     private readonly ILocalInverterApiAccessor _httpAccessor;
     private readonly LocalInverterApiOptions _options;
+    private readonly ILogger<LocalInverterSettingsDataReader> _logger;
 
-    public LocalInverterSettingsDataReader(ILocalInverterApiAccessor httpAccessor, IOptions<LocalInverterApiOptions> options)
+    public LocalInverterSettingsDataReader(ILocalInverterApiAccessor httpAccessor,
+        IOptions<LocalInverterApiOptions> options,
+        ILogger<LocalInverterSettingsDataReader> logger)
     {
         ArgumentNullException.ThrowIfNull(options);
         ArgumentNullException.ThrowIfNull(options.Value);
@@ -22,21 +26,26 @@ public class LocalInverterSettingsDataReader : IInverterSettingsDataReader
 
         _options = options.Value;
         _httpAccessor = httpAccessor;
+        _logger = logger;
     }
 
     public async Task<CurrentInverterSettings> GetCurrentSettingsAsync(CancellationToken cancellationToken)
     {
         var uri = BuildApiUri();
         var body = BuildApiBody("ReadSetData");
+        _logger.LogDebug("Requesting local inverter settings from {Uri}", uri);
         var response = await _httpAccessor.GetStringAsync(uri, body, cancellationToken);
 
         var inverterData = JsonSerializer.Deserialize<JsonArray>(response);
         if (inverterData == null) throw new LocalInverterApiException("Could not read inverter data from settings endpoint");
         if (inverterData.Count < 32) throw new LocalInverterApiException("Could not read inverter data from settings endpoint");
 
+        var workType = MapSettings(GetCurrentlySelectedWorkType(inverterData));
+        _logger.LogDebug("Local inverter settings retrieved: current work type {WorkType}", workType);
+
         return new CurrentInverterSettings
         {
-            CurrentWorkType = MapSettings(GetCurrentlySelectedWorkType(inverterData)),
+            CurrentWorkType = workType,
             SelfUseSettings = new CurrentInverterSettings.SelfUse(
                 GetBoolDataItem(inverterData, DataItem.ChargeFromGridIsEnabled),
                 GetIntDataItem(inverterData, DataItem.ChargeFromGridMaxBatteryPercent, -1),
