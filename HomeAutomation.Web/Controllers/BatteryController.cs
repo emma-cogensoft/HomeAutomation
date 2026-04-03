@@ -18,26 +18,37 @@ public class BatteryController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<BatteryResponse> GetAsync()
+    public async Task<IActionResult> GetAsync()
     {
-        var batteryInfo = await _mediator.Send(new GetBatteryData());
-        
-        return new BatteryResponse
+        try
         {
-            StateDescription = batteryInfo.BatteryState.Description,
-            ActivityDescription = batteryInfo.BatteryActivity.Description,
-            TimeToCompleteInH = batteryInfo.BatteryActivity.TimeToComplete,
-            PercentageCharged = batteryInfo.BatteryState.PercentageCharged,
-            PercentageUncharged = batteryInfo.BatteryState.PercentageUncharged,
-            AvailablePercentageCharged = batteryInfo.BatteryState.AvailablePercentageCharged,
-            TotalBatteryCapacityInWh = batteryInfo.BatteryCapacity,
-            AvailableChargeInBattery = batteryInfo.BatteryState.AvailableChargeInBattery,
-            RemainingBatteryCapacityInWh = batteryInfo.BatteryState.RemainingBatteryCapacity,
-            BatteryPowerUsageInW = batteryInfo.BatteryActivity.BatteryPowerUsage,
-            TimeStamp = batteryInfo.BatteryState.TimeStamp
-        };
+            var batteryInfo = await _mediator.Send(new GetBatteryData());
+
+            _logger.LogDebug("Battery data retrieved: {PercentageCharged}% charged, source: {Source}",
+                batteryInfo.BatteryState.PercentageCharged, batteryInfo.BatteryState.TimeStamp);
+
+            return Ok(new BatteryResponse
+            {
+                StateDescription = batteryInfo.BatteryState.Description,
+                ActivityDescription = batteryInfo.BatteryActivity.Description,
+                TimeToCompleteInH = batteryInfo.BatteryActivity.TimeToComplete,
+                PercentageCharged = batteryInfo.BatteryState.PercentageCharged,
+                PercentageUncharged = batteryInfo.BatteryState.PercentageUncharged,
+                AvailablePercentageCharged = batteryInfo.BatteryState.AvailablePercentageCharged,
+                TotalBatteryCapacityInWh = batteryInfo.BatteryCapacity,
+                AvailableChargeInBattery = batteryInfo.BatteryState.AvailableChargeInBattery,
+                RemainingBatteryCapacityInWh = batteryInfo.BatteryState.RemainingBatteryCapacity,
+                BatteryPowerUsageInW = batteryInfo.BatteryActivity.BatteryPowerUsage,
+                TimeStamp = batteryInfo.BatteryState.TimeStamp
+            });
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Failed to retrieve battery data");
+            return StatusCode(503, "Battery data is temporarily unavailable.");
+        }
     }
-    
+
     public record BatteryResponse
     {
         public string StateDescription { get; init; } = string.Empty;

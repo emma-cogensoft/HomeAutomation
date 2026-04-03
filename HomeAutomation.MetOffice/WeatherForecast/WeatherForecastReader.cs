@@ -1,6 +1,7 @@
 using HomeAutomation.Application.Services.Weather;
 using HomeAutomation.Domain.Weather;
 using HomeAutomation.MetOffice.ApiAccessor;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
 namespace HomeAutomation.MetOffice.WeatherForecast;
@@ -9,23 +10,32 @@ public class WeatherForecastReader : IWeatherForecastReader
 {
     private readonly IWeatherForecastApiAccessor _httpAccessor;
     private readonly OpenMeteoApiOptions _options;
+    private readonly ILogger<WeatherForecastReader> _logger;
 
-    public WeatherForecastReader(IWeatherForecastApiAccessor httpAccessor, IOptions<OpenMeteoApiOptions> options)
+    public WeatherForecastReader(IWeatherForecastApiAccessor httpAccessor,
+        IOptions<OpenMeteoApiOptions> options,
+        ILogger<WeatherForecastReader> logger)
     {
         ArgumentNullException.ThrowIfNull(options);
         ArgumentNullException.ThrowIfNull(httpAccessor);
 
         _httpAccessor = httpAccessor;
         _options = options.Value;
+        _logger = logger;
     }
 
     public async Task<Domain.Weather.WeatherForecast> GetForecastForToday(CancellationToken cancellationToken)
     {
         var uri = BuildUri(_options.Latitude, _options.Longitude);
+        _logger.LogDebug("Requesting weather forecast from {Uri}", uri);
+
         var response = await _httpAccessor.GetAsync<OpenMeteoResponse>(uri, cancellationToken);
 
         var isDay = response.CurrentWeather.IsDay == 1;
         var weatherType = MapWmoCode(response.CurrentWeather.WeatherCode, isDay);
+
+        _logger.LogDebug("Weather forecast: WMO code {WmoCode}, isDay {IsDay}, mapped to {WeatherType}",
+            response.CurrentWeather.WeatherCode, isDay, weatherType);
 
         return new Domain.Weather.WeatherForecast(weatherType);
     }

@@ -2,6 +2,7 @@ using System.Text.Json;
 using HomeAutomation.Application.Services.Inverter;
 using HomeAutomation.CloudInverter.ApiAccessor;
 using HomeAutomation.Domain.Inverter;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
 namespace HomeAutomation.CloudInverter.RealTimeData;
@@ -10,9 +11,11 @@ public class CloudInverterRealtimeDataReader : IInverterRealtimeDataReader
 {
     private readonly ICloudInverterApiAccessor _httpAccessor;
     private readonly CloudInverterApiOptions _options;
+    private readonly ILogger<CloudInverterRealtimeDataReader> _logger;
 
     public CloudInverterRealtimeDataReader(ICloudInverterApiAccessor httpAccessor,
-        IOptions<CloudInverterApiOptions> options)
+        IOptions<CloudInverterApiOptions> options,
+        ILogger<CloudInverterRealtimeDataReader> logger)
     {
         ArgumentNullException.ThrowIfNull(options);
         ArgumentNullException.ThrowIfNull(options.Value);
@@ -20,16 +23,19 @@ public class CloudInverterRealtimeDataReader : IInverterRealtimeDataReader
 
         _options = options.Value;
         _httpAccessor = httpAccessor;
+        _logger = logger;
     }
 
     public async Task<InverterRealtimeData> GetInverterRealtimeDataAsync(CancellationToken cancellationToken)
     {
         var uri = TryBuildApiUri(_options.RequestTemplateUri, "getRealtimeInfo");
+        _logger.LogDebug("Requesting cloud inverter realtime data from {Uri}", uri);
+
         var response = await _httpAccessor.GetJsonAsync(uri, cancellationToken);
         var inverterData = response.Deserialize<CloudInverterRealtimeDataResponse>();
         if (inverterData == null) throw new CloudInverterException("Could not read inverter data");
 
-        return new InverterRealtimeData
+        var result = new InverterRealtimeData
         {
             BatteryPercentage = inverterData.Result.Soc ?? -1,
             BatteryPowerUsage = inverterData.Result.BatPower ?? -1,
@@ -39,6 +45,11 @@ public class CloudInverterRealtimeDataReader : IInverterRealtimeDataReader
             TimeStamp = TryConvertStringDateTime(inverterData.Result.UploadTime ?? string.Empty),
             Source = "CloudInverter"
         };
+
+        _logger.LogDebug("Cloud inverter data: battery {Battery}%, solar {Solar}W, timestamp {Timestamp}",
+            result.BatteryPercentage, result.SolarInput, result.TimeStamp);
+
+        return result;
     }
 
     private static Uri TryBuildApiUri(string maybeUri, string requestName)
