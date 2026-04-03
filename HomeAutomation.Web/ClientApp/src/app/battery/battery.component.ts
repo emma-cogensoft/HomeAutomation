@@ -32,5 +32,6 @@ interface Battery {
   remainingBatteryCapacityInWh: number,
   activityDescription: string,
   batteryPowerUsageInW: number,
-  timeToCompleteInH: number
+  timeToCompleteInH: number,
+  dataSource: string
 }

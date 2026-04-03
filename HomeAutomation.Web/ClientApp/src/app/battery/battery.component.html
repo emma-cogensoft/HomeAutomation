@@ -3,6 +3,11 @@
 <p *ngIf="batteryData.isLoading"><em>Loading...</em></p>
 
 <div *ngIf="!batteryData.isLoading">
+
+  <div *ngIf="batteryData.dataSource === 'CloudInverter'" style="background:#fff3cd;border:1px solid #ffc107;padding:8px 12px;border-radius:4px;margin-bottom:12px;">
+    ⚠️ Local inverter unreachable — showing cloud data (may be slightly delayed)
+  </div>
+
   <p> {{ batteryData.percentageCharged }}% </p>
   <p> {{ batteryData.batteryPowerUsageInW }}W </p>
 

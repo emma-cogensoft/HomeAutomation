@@ -26,7 +26,7 @@ public static class ServiceCollectionExtensions
             options.CircuitBreaker.SamplingDuration = TimeSpan.FromSeconds(30);
         });
 
-        services.AddScoped<IInverterRealtimeDataReader, LocalInverterRealtimeDataReader>();
+        services.AddKeyedScoped<IInverterRealtimeDataReader, LocalInverterRealtimeDataReader>("local");
         services.AddScoped<IInverterSettingsDataReader, LocalInverterSettingsDataReader>();
         services.AddScoped<ILocalInverterApiAccessor, LocalInverterApiAccessor>();
     }
