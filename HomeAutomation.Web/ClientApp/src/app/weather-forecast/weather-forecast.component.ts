@@ -1,17 +1,20 @@
-import { Component, Inject } from '@angular/core';
+import { Component, Inject, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
 @Component({
+  standalone: false,
   selector: 'app-weather-forecast',
   templateUrl: './weather-forecast.component.html'
 })
 export class WeatherForecastComponent {
   public weather: WeatherForecast = <WeatherForecast>{ isLoading: true, isSunny: false };
 
-  constructor(http: HttpClient, @Inject('BASE_URL') baseUrl: string) {
-    http.get<WeatherForecast>(baseUrl + 'api/forecast').subscribe(result => {
-      this.weather = result;
-    }, error => console.error(error));
+  constructor(@Inject('BASE_URL') baseUrl: string) {
+    const http = inject(HttpClient);
+    http.get<WeatherForecast>(baseUrl + 'api/forecast').subscribe({
+      next: (result: WeatherForecast) => { this.weather = result; },
+      error: (error: unknown) => console.error(error)
+    });
   }
 }
 
