@@ -7,6 +7,9 @@ set -e
 PI_PATH="${1:-/opt/homeautomation}"
 PI_USER="${2:-pi}"
 
+echo "==> Installing emoji font support..."
+sudo apt install -y fonts-noto-color-emoji
+
 echo "==> Setting execute permission on binary..."
 chmod +x "$PI_PATH/HomeAutomation.Web"
 
