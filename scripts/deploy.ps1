@@ -2,12 +2,13 @@
 .SYNOPSIS
     Builds and deploys the Home Automation app to a Raspberry Pi.
 .DESCRIPTION
-    1. Builds a self-contained linux-arm64 binary
-    2. Copies it to the Pi via scp
-    3. Configures a systemd service
-    4. Reads .NET user-secrets and writes them as environment variables
+    1. Builds a self-contained linux-arm64 binary (Angular SPA included)
+    2. Stops the running service so the binary is not locked
+    3. Copies published files to the Pi via scp
+    4. Runs setup.sh on the Pi (systemd service, kiosk autostart, fonts)
+    5. Reads .NET user-secrets and writes them as environment variables
        in the systemd override file on the Pi (clearly displayed before writing)
-    5. Restarts the service and verifies with a health check
+    6. Restarts the service and verifies with a health check
 .EXAMPLE
     .\deploy.ps1 -PiHost homeautomation.local -PiUser emma
 #>
