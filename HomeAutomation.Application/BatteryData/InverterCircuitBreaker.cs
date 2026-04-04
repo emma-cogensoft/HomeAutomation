@@ -8,14 +8,14 @@ namespace HomeAutomation.Application.BatteryData;
 public class InverterCircuitBreaker
 {
     private readonly int _failureThreshold;
-    private volatile int _consecutiveFailures;
+    private int _consecutiveFailures;
 
     public InverterCircuitBreaker(int failureThreshold = 3)
     {
         _failureThreshold = failureThreshold;
     }
 
-    public bool IsOpen => _consecutiveFailures >= _failureThreshold;
+    public bool IsOpen => Volatile.Read(ref _consecutiveFailures) >= _failureThreshold;
 
     public void RecordSuccess() => Interlocked.Exchange(ref _consecutiveFailures, 0);
 
