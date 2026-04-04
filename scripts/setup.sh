@@ -33,10 +33,10 @@ sudo systemctl enable homeautomation
 
 echo "==> Configuring kiosk mode..."
 AUTOSTART_DIR="/home/${PI_USER}/.config/autostart"
-mkdir -p "$AUTOSTART_DIR"
+sudo -u "$PI_USER" mkdir -p "$AUTOSTART_DIR"
 
 # XDG autostart entry — works with GNOME and other Wayland compositors on Trixie
-tee "$AUTOSTART_DIR/homeautomation-kiosk.desktop" > /dev/null <<EOF
+sudo -u "$PI_USER" tee "$AUTOSTART_DIR/homeautomation-kiosk.desktop" > /dev/null <<EOF
 [Desktop Entry]
 Type=Application
 Name=Home Automation Kiosk
@@ -44,10 +44,16 @@ Exec=chromium-browser --kiosk --noerrdialogs --disable-infobars --disable-sessio
 X-GNOME-Autostart-enabled=true
 EOF
 
-# Disable screensaver and screen blanking via GNOME settings (Trixie default)
-# These are set as the Pi user so they apply to the desktop session
-sudo -u "$PI_USER" gsettings set org.gnome.desktop.screensaver lock-enabled false 2>/dev/null || true
-sudo -u "$PI_USER" gsettings set org.gnome.desktop.session idle-delay 0 2>/dev/null || true
+# Disable screensaver and screen blanking via GNOME settings.
+# Run inside a temporary DBus session so this works non-interactively over SSH.
+if command -v dbus-run-session >/dev/null 2>&1; then
+    sudo -u "$PI_USER" env HOME="/home/${PI_USER}" dbus-run-session -- sh -c '
+        gsettings set org.gnome.desktop.screensaver lock-enabled false &&
+        gsettings set org.gnome.desktop.session idle-delay 0
+    ' || echo "==> WARNING: Failed to apply GNOME idle/blanking settings. Apply them from a logged-in desktop session if needed."
+else
+    echo "==> WARNING: dbus-run-session not available; GNOME idle/blanking settings were not applied."
+fi
 
 echo "==> NOTE: Ensure auto-login is enabled in raspi-config:"
 echo "    sudo raspi-config -> System Options -> Boot / Auto Login -> Desktop Autologin"
