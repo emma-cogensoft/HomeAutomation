@@ -1,5 +1,5 @@
 #!/bin/bash
-# Runs on the Raspberry Pi to configure the systemd service.
+# Runs on the Raspberry Pi to configure the systemd service and kiosk mode.
 # Called automatically by deploy.ps1, but can also be run manually:
 #   bash setup.sh [pi-path] [pi-user]
 set -e
@@ -31,4 +31,31 @@ EOF
 echo "==> Enabling service (will auto-start on boot)..."
 sudo systemctl enable homeautomation
 
+echo "==> Configuring kiosk mode..."
+AUTOSTART_DIR="/home/${PI_USER}/.config/autostart"
+sudo -u "$PI_USER" mkdir -p "$AUTOSTART_DIR"
+
+# XDG autostart entry — works with GNOME and other Wayland compositors on Trixie
+sudo -u "$PI_USER" tee "$AUTOSTART_DIR/homeautomation-kiosk.desktop" > /dev/null <<EOF
+[Desktop Entry]
+Type=Application
+Name=Home Automation Kiosk
+Exec=chromium-browser --kiosk --noerrdialogs --disable-infobars --disable-session-crashed-bubble --app=http://localhost:5000
+X-GNOME-Autostart-enabled=true
+EOF
+
+# Disable screensaver and screen blanking via GNOME settings.
+# Run inside a temporary DBus session so this works non-interactively over SSH.
+if command -v dbus-run-session >/dev/null 2>&1; then
+    sudo -u "$PI_USER" env HOME="/home/${PI_USER}" dbus-run-session -- sh -c '
+        gsettings set org.gnome.desktop.screensaver lock-enabled false &&
+        gsettings set org.gnome.desktop.session idle-delay 0
+    ' || echo "==> WARNING: Failed to apply GNOME idle/blanking settings. Apply them from a logged-in desktop session if needed."
+else
+    echo "==> WARNING: dbus-run-session not available; GNOME idle/blanking settings were not applied."
+fi
+
+echo "==> NOTE: Ensure auto-login is enabled in raspi-config:"
+echo "    sudo raspi-config -> System Options -> Boot / Auto Login -> Desktop Autologin"
+echo ""
 echo "==> Setup complete."

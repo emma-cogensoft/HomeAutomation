@@ -75,8 +75,9 @@ Success "Directory ready."
 
 # ── 4. Copy published files ───────────────────────────────────────────────────
 Step "Copying published files to Pi..."
-$publishDir = Join-Path $webDir "publish\*"
-scp -r $publishDir "${PiUser}@${PiHost}:${PiPath}/"
+$publishDir = Join-Path $webDir "publish"
+$publishSource = $publishDir.Replace('\', '/') + "/*"
+scp -r $publishSource "${PiUser}@${PiHost}:${PiPath}/"
 if ($LASTEXITCODE -ne 0) { throw "scp failed" }
 Success "Files copied."
 
