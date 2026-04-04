@@ -46,6 +46,15 @@ if (!app.Environment.IsDevelopment())
     app.UseHttpsRedirection();
 }
 app.UseStaticFiles();
+
+// Angular 17+ outputs to wwwroot/browser/ — serve those files at the root path
+app.UseStaticFiles(new StaticFileOptions
+{
+    FileProvider = new Microsoft.Extensions.FileProviders.PhysicalFileProvider(
+        Path.Combine(builder.Environment.WebRootPath, "browser")),
+    RequestPath = ""
+});
+
 app.UseRouting();
 
 
@@ -53,6 +62,6 @@ app.MapControllerRoute(
     name: "default",
     pattern: "{controller}/{action=Index}/{id?}");
 
-app.MapFallbackToFile("index.html");
+app.MapFallbackToFile("browser/index.html");
 
 app.Run();
