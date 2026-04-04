@@ -73,14 +73,19 @@ Step "Preparing $PiPath on Pi..."
 ssh "${PiUser}@${PiHost}" "sudo mkdir -p $PiPath && sudo chown ${PiUser}:${PiUser} $PiPath"
 Success "Directory ready."
 
-# ── 4. Copy published files ───────────────────────────────────────────────────
+# ── 4. Stop service before copying (binary may be locked) ─────────────────────
+Step "Stopping service on Pi..."
+ssh "${PiUser}@${PiHost}" "sudo systemctl stop homeautomation 2>/dev/null || true"
+Success "Service stopped."
+
+# ── 5. Copy published files ───────────────────────────────────────────────────
 Step "Copying published files to Pi..."
 $publishDir = Join-Path $webDir "publish"
 scp -r "${publishDir}/." "${PiUser}@${PiHost}:${PiPath}/"
 if ($LASTEXITCODE -ne 0) { throw "scp failed" }
 Success "Files copied."
 
-# ── 5. Run setup script on Pi ─────────────────────────────────────────────────
+# ── 6. Run setup script on Pi ─────────────────────────────────────────────────
 Step "Running setup script on Pi..."
 $setupScript = Join-Path $PSScriptRoot "setup.sh"
 scp $setupScript "${PiUser}@${PiHost}:/tmp/ha-setup.sh"
@@ -89,7 +94,7 @@ ssh "${PiUser}@${PiHost}" "sed -i 's/\r//' /tmp/ha-setup.sh && bash /tmp/ha-setu
 if ($LASTEXITCODE -ne 0) { throw "Setup script failed" }
 Success "Service file created and enabled."
 
-# ── 6. Write secrets to override.conf ─────────────────────────────────────────
+# ── 7. Write secrets to override.conf ─────────────────────────────────────────
 Step "Writing secrets to systemd override.conf on Pi..."
 $overrideDir  = "/etc/systemd/system/homeautomation.service.d"
 $overridePath = "$overrideDir/override.conf"
@@ -102,13 +107,13 @@ ssh "${PiUser}@${PiHost}" "sudo mkdir -p $overrideDir && sudo mv /tmp/ha-overrid
 if ($LASTEXITCODE -ne 0) { throw "Failed to write override.conf" }
 Success "Secrets written to $overridePath."
 
-# ── 7. Reload and restart ─────────────────────────────────────────────────────
+# ── 8. Reload and restart ─────────────────────────────────────────────────────
 Step "Reloading systemd and restarting service..."
 ssh "${PiUser}@${PiHost}" "sudo systemctl daemon-reload && sudo systemctl restart homeautomation"
 if ($LASTEXITCODE -ne 0) { throw "Service failed to start" }
 Success "Service started."
 
-# ── 8. Health check ───────────────────────────────────────────────────────────
+# ── 9. Health check ───────────────────────────────────────────────────────────
 Step "Running health check..."
 Start-Sleep -Seconds 3
 $health = ssh "${PiUser}@${PiHost}" "curl -sf http://localhost:5000/api/healthcheck 2>/dev/null"
