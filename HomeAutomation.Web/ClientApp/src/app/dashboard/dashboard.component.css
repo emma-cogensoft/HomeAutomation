@@ -68,7 +68,7 @@
 /* Cards */
 .cards {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   gap: 1rem;
   margin-bottom: 1.25rem;
 }
@@ -129,6 +129,9 @@
 
 .battery-bar-fill.low { background: #ff453a; }
 .battery-bar-fill.mid { background: #ff9f0a; }
+
+.grid-export { color: #32d74b; }
+.grid-import { color: #ff453a; }
 
 /* Footer */
 .dashboard-footer {

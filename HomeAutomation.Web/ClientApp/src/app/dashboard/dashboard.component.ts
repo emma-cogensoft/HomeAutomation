@@ -15,6 +15,9 @@ interface BatteryData {
   batteryPowerUsageInW: number;
   timeToCompleteInH: number;
   dataSource: string;
+  solarInputInW: number;
+  homeUsageInW: number;
+  feedInW: number;
 }
 
 interface WeatherData {
@@ -24,6 +27,7 @@ interface WeatherData {
 
 interface InverterData {
   isLoading: boolean;
+  isLoaded: boolean;
   timeStamp: Date;
   currentSettingName: string;
 }
@@ -144,5 +148,9 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
   get isCloudData(): boolean {
     return this.state.battery?.dataSource === 'CloudInverter';
+  }
+
+  get inverterAvailable(): boolean {
+    return this.state.inverter?.isLoaded === true;
   }
 }

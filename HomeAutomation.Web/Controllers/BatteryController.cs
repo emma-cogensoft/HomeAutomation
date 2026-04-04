@@ -40,7 +40,10 @@ public class BatteryController : ControllerBase
                 RemainingBatteryCapacityInWh = batteryInfo.BatteryInfo.BatteryState.RemainingBatteryCapacity,
                 BatteryPowerUsageInW = batteryInfo.BatteryInfo.BatteryActivity.BatteryPowerUsage,
                 TimeStamp = batteryInfo.BatteryInfo.BatteryState.TimeStamp,
-                DataSource = batteryInfo.DataSource
+                DataSource = batteryInfo.DataSource,
+                SolarInputInW = batteryInfo.SolarInputInW,
+                HomeUsageInW = batteryInfo.HomeUsageInW,
+                FeedInW = batteryInfo.FeedInW
             });
         }
         catch (Exception ex)
@@ -64,5 +67,8 @@ public class BatteryController : ControllerBase
         public int BatteryPowerUsageInW { get; init; }
         public DateTime TimeStamp { get; init; }
         public string DataSource { get; init; } = string.Empty;
+        public int SolarInputInW { get; init; }
+        public int HomeUsageInW { get; init; }
+        public int FeedInW { get; init; }
     }
 }

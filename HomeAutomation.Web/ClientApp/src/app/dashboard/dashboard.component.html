@@ -62,11 +62,38 @@
         <div class="sub">{{ state.weather.isSunny ? 'Sunny' : 'Cloudy' }}</div>
       </div>
 
-      <!-- Inverter card -->
+      <!-- Home usage card -->
       <div class="card-dark">
+        <h3>Home Usage</h3>
+        <div class="value">{{ state.battery.homeUsageInW >= 0 ? state.battery.homeUsageInW : 0 }}W</div>
+        <div class="sub">Current consumption</div>
+      </div>
+
+      <!-- Grid card -->
+      <div class="card-dark">
+        <h3>Grid</h3>
+        <ng-container *ngIf="state.battery.feedInW >= 0; else importingGrid">
+          <div class="value grid-export">{{ state.battery.feedInW }}W</div>
+          <div class="sub">{{ state.battery.feedInW > 0 ? 'Exporting' : 'Grid idle' }}</div>
+        </ng-container>
+        <ng-template #importingGrid>
+          <div class="value grid-import">{{ state.battery.feedInW * -1 }}W</div>
+          <div class="sub">Importing from grid</div>
+        </ng-template>
+      </div>
+
+      <!-- Solar card -->
+      <div class="card-dark">
+        <h3>Solar</h3>
+        <div class="value">{{ (state.battery.solarInputInW > 0 ? state.battery.solarInputInW : 0) }}W</div>
+        <div class="sub">{{ state.battery.solarInputInW > 0 ? 'Generating' : 'No generation' }}</div>
+      </div>
+
+      <!-- Inverter card -->
+      <div class="card-dark" *ngIf="inverterAvailable">
         <h3>Inverter Mode</h3>
         <div class="value" style="font-size:1.4rem; padding-top:0.5rem">
-          {{ state.inverter.currentSettingName || 'Unavailable' }}
+          {{ state.inverter.currentSettingName }}
         </div>
       </div>
 
