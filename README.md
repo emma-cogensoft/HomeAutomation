@@ -91,7 +91,31 @@ The recommended setup is two Pis:
 | **Pi 4** | Runs the ASP.NET Core backend as a systemd service |
 | **Pi 3** | Kiosk display — runs Chromium pointed at the Pi 4 |
 
-### Build for Pi 4 (ARM64)
+### Automated deploy (recommended)
+
+The `scripts/deploy.ps1` script handles the full deployment from your Windows machine — build, copy, service setup, secrets, and health check.
+
+Prerequisites: SSH access to the Pi (see *Raspberry Pi Imager* setup above).
+
+```powershell
+.\scripts\deploy.ps1 -PiHost homeautomation.local -PiUser YOUR_PI_USERNAME
+```
+
+The script will:
+1. Build a self-contained linux-arm64 binary
+2. Copy it to `/opt/homeautomation/` on the Pi
+3. Create and enable a systemd service
+4. Read your `.NET user-secrets` and display them before writing to the Pi's systemd override file
+5. Restart the service and verify with a health check
+
+> **Re-deploying?** Just run the same command again — it's fully idempotent.
+
+### Manual deploy
+
+<details>
+<summary>Expand for manual steps</summary>
+
+#### Build for Pi 4 (ARM64)
 
 On your development machine:
 
@@ -102,13 +126,13 @@ dotnet publish -r linux-arm64 --self-contained -c Release -o ./publish
 
 This produces a self-contained binary — no .NET runtime needed on the Pi.
 
-### Copy to Pi 4
+#### Copy to Pi 4
 
 ```bash
 scp -r ./publish/* pi@YOUR_PI4_IP:/opt/homeautomation/
 ```
 
-### Configure secrets on Pi 4
+#### Configure secrets on Pi 4
 
 Set secrets as environment variables. ASP.NET Core maps `Services__X__Y` → `Services:X:Y`:
 
@@ -127,7 +151,7 @@ Environment="Services__OpenMeteoApiSettingsOptions__Longitude=-0.1"
 Environment="Services__BatteryOptions__CapacityInWh=11600"
 ```
 
-### Create systemd service on Pi 4
+#### Create systemd service on Pi 4
 
 Create `/etc/systemd/system/homeautomation.service`:
 
@@ -159,9 +183,11 @@ sudo systemctl start homeautomation
 Check it's running:
 
 ```bash
-curl http://localhost:5165/health
-# Expected: Healthy
+curl http://localhost:5000/api/healthcheck
+# Expected: 1
 ```
+
+</details>
 
 ### Set up Pi 3 as a kiosk display
 

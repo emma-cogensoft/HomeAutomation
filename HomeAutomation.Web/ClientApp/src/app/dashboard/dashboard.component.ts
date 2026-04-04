@@ -38,7 +38,6 @@ interface DashboardState {
   inverter: InverterData;
   isLoading: boolean;
   lastUpdated: Date | null;
-  hasError: boolean;
 }
 
 @Component({
@@ -57,8 +56,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     weather: <WeatherData>{ isLoading: true },
     inverter: <InverterData>{ isLoading: true },
     isLoading: true,
-    lastUpdated: null,
-    hasError: false
+    lastUpdated: null
   };
 
   constructor(
@@ -89,8 +87,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
           weather,
           inverter,
           isLoading: false,
-          lastUpdated: new Date(),
-          hasError: false
+          lastUpdated: new Date()
         };
         this.cdr.markForCheck();
       },

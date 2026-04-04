@@ -15,7 +15,7 @@ public class InverterCircuitBreaker
         _failureThreshold = failureThreshold;
     }
 
-    public bool IsOpen => _consecutiveFailures >= _failureThreshold;
+    public bool IsOpen => Volatile.Read(ref _consecutiveFailures) >= _failureThreshold;
 
     public void RecordSuccess() => Interlocked.Exchange(ref _consecutiveFailures, 0);
 
