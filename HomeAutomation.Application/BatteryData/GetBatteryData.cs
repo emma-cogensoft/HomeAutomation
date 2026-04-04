@@ -5,7 +5,7 @@ using Microsoft.Extensions.Options;
 
 namespace HomeAutomation.Application.BatteryData;
 
-public record BatteryDataResult(BatteryInfo BatteryInfo, string DataSource);
+public record BatteryDataResult(BatteryInfo BatteryInfo, string DataSource, int SolarInputInW, int HomeUsageInW, int FeedInW);
 
 public class GetBatteryData : IRequest<BatteryDataResult>
 {
@@ -29,7 +29,7 @@ public class GetBatteryData : IRequest<BatteryDataResult>
                 (int)batteryRealtimeData.BatteryPercentage,
                 _batteryOptions.CapacityInWh);
 
-            return new BatteryDataResult(batteryInfo, batteryRealtimeData.Source);
+            return new BatteryDataResult(batteryInfo, batteryRealtimeData.Source, (int)batteryRealtimeData.SolarInput, (int)batteryRealtimeData.HomeUsage, (int)batteryRealtimeData.FeedIn);
         }
     }
 }

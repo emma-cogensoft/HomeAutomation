@@ -1,0 +1,111 @@
+<div class="dashboard">
+
+  <!-- Loading state -->
+  <div *ngIf="state.isLoading" class="loading-text">Loading...</div>
+
+  <ng-container *ngIf="!state.isLoading">
+
+    <!-- Summary bar -->
+    <div class="summary-bar">
+      <div class="summary-battery">{{ state.battery.percentageCharged }}%</div>
+
+      <div class="summary-power"
+           [class.charging]="state.battery.activityDescription === 'Charging'"
+           [class.discharging]="state.battery.activityDescription === 'Discharging'">
+        {{ powerLabel }}
+      </div>
+
+      <div class="summary-weather">
+        <ng-container *ngIf="state.weather.isSunny">☀️</ng-container>
+        <ng-container *ngIf="!state.weather.isSunny">🌥️</ng-container>
+      </div>
+
+      <div class="summary-inverter" *ngIf="state.inverter.currentSettingName">
+        ⚙ {{ state.inverter.currentSettingName }}
+      </div>
+    </div>
+
+    <!-- Suggestion banner -->
+    <div class="suggestion-banner" [class.warning]="state.battery.percentageCharged < 15">
+      {{ suggestion }}
+    </div>
+
+    <!-- Detail cards -->
+    <div class="cards">
+
+      <!-- Battery card -->
+      <div class="card-dark">
+        <h3>Battery</h3>
+        <div class="value">{{ state.battery.percentageCharged }}%</div>
+        <div class="sub">{{ state.battery.activityDescription }}</div>
+        <div class="battery-bar-bg">
+          <div class="battery-bar-fill"
+               [class.low]="state.battery.percentageCharged < 20"
+               [class.mid]="state.battery.percentageCharged >= 20 && state.battery.percentageCharged < 50"
+               [style.width.%]="state.battery.percentageCharged">
+          </div>
+        </div>
+        <div class="detail" *ngIf="state.battery.timeToCompleteInH > 0">
+          {{ state.battery.activityDescription === 'Charging' ? 'Full in' : 'Empty in' }}
+          ~{{ state.battery.timeToCompleteInH | number:'1.1-1' }}h
+        </div>
+        <div class="detail">{{ state.battery.remainingBatteryCapacityInWh | number }}Wh remaining</div>
+      </div>
+
+      <!-- Weather card -->
+      <div class="card-dark">
+        <h3>Weather</h3>
+        <div class="value" style="font-size:3rem">
+          <ng-container *ngIf="state.weather.isSunny">☀️</ng-container>
+          <ng-container *ngIf="!state.weather.isSunny">🌥️</ng-container>
+        </div>
+        <div class="sub">{{ state.weather.isSunny ? 'Sunny' : 'Cloudy' }}</div>
+      </div>
+
+      <!-- Home usage card -->
+      <div class="card-dark">
+        <h3>Home Usage</h3>
+        <div class="value">{{ state.battery.homeUsageInW >= 0 ? state.battery.homeUsageInW : 0 }}W</div>
+        <div class="sub">Current consumption</div>
+      </div>
+
+      <!-- Grid card -->
+      <div class="card-dark">
+        <h3>Grid</h3>
+        <ng-container *ngIf="state.battery.feedInW >= 0; else importingGrid">
+          <div class="value grid-export">{{ state.battery.feedInW }}W</div>
+          <div class="sub">{{ state.battery.feedInW > 0 ? 'Exporting' : 'Grid idle' }}</div>
+        </ng-container>
+        <ng-template #importingGrid>
+          <div class="value grid-import">{{ state.battery.feedInW * -1 }}W</div>
+          <div class="sub">Importing from grid</div>
+        </ng-template>
+      </div>
+
+      <!-- Solar card -->
+      <div class="card-dark">
+        <h3>Solar</h3>
+        <div class="value">{{ (state.battery.solarInputInW > 0 ? state.battery.solarInputInW : 0) }}W</div>
+        <div class="sub">{{ state.battery.solarInputInW > 0 ? 'Generating' : 'No generation' }}</div>
+      </div>
+
+      <!-- Inverter card -->
+      <div class="card-dark" *ngIf="inverterAvailable">
+        <h3>Inverter Mode</h3>
+        <div class="value" style="font-size:1.4rem; padding-top:0.5rem">
+          {{ state.inverter.currentSettingName }}
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Footer -->
+    <div class="dashboard-footer">
+      <span *ngIf="state.lastUpdated">⟳ Updated {{ state.lastUpdated | date:'HH:mm:ss' }}</span>
+      <span>· refreshes every 60s</span>
+      <span class="cloud-badge" *ngIf="isCloudData">⚠ Cloud data</span>
+    </div>
+
+  </ng-container>
+
+</div>

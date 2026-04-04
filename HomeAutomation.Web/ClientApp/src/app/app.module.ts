@@ -10,8 +10,9 @@ import { HomeComponent } from './home/home.component';
 import { CounterComponent } from './counter/counter.component';
 import { BatteryComponent } from './battery/battery.component';
 import { WeatherForecastComponent } from './weather-forecast/weather-forecast.component';
-import {NgOptimizedImage} from "@angular/common";
-import {InverterSettingsComponent} from "./inverter-settings/inverter-settings.component";
+import { NgOptimizedImage } from "@angular/common";
+import { InverterSettingsComponent } from "./inverter-settings/inverter-settings.component";
+import { DashboardComponent } from "./dashboard/dashboard.component";
 
 @NgModule({
   declarations: [
@@ -21,13 +22,15 @@ import {InverterSettingsComponent} from "./inverter-settings/inverter-settings.c
     CounterComponent,
     BatteryComponent,
     WeatherForecastComponent,
-    InverterSettingsComponent
+    InverterSettingsComponent,
+    DashboardComponent
   ],
     imports: [
         BrowserModule,
         FormsModule,
         RouterModule.forRoot([
-            {path: '', component: HomeComponent, pathMatch: 'full'},
+            {path: '', component: DashboardComponent, pathMatch: 'full'},
+            {path: 'home', component: HomeComponent},
             {path: 'counter', component: CounterComponent},
             {path: 'battery', component: BatteryComponent},
             {path: 'weather-forecast', component: WeatherForecastComponent},
