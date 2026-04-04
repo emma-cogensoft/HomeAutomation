@@ -81,8 +81,8 @@ public class FallbackInverterRealtimeDataReaderTests
         Assert.Multiple(async () =>
         {
             Assert.That(async () => await _sut.GetInverterRealtimeDataAsync(default), Throws.InvalidOperationException);
-            await _localReader.DidNotReceiveWithAnyArgs().GetInverterRealtimeDataAsync(default);
-            await _cloudReader.DidNotReceiveWithAnyArgs().GetInverterRealtimeDataAsync(default);
+            _localReader.DidNotReceiveWithAnyArgs().GetInverterRealtimeDataAsync(default);
+            _cloudReader.DidNotReceiveWithAnyArgs().GetInverterRealtimeDataAsync(default);
         });
     }
 

@@ -8,7 +8,7 @@ namespace HomeAutomation.Application.BatteryData;
 public class InverterCircuitBreaker
 {
     private readonly int _failureThreshold;
-    private int _consecutiveFailures;
+    private volatile int _consecutiveFailures;
 
     public InverterCircuitBreaker(int failureThreshold = 3)
     {
