@@ -40,7 +40,7 @@ sudo -u "$PI_USER" tee "$AUTOSTART_DIR/homeautomation-kiosk.desktop" > /dev/null
 [Desktop Entry]
 Type=Application
 Name=Home Automation Kiosk
-Exec=chromium --kiosk --noerrdialogs --disable-infobars --disable-session-crashed-bubble --app=http://localhost:5000
+Exec=bash -c "sleep 20 && epiphany --application-mode --profile=/tmp/ha-kiosk http://127.0.0.1:5000"
 X-GNOME-Autostart-enabled=true
 EOF
 
