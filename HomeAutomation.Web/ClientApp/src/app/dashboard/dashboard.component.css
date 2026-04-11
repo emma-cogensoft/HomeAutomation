@@ -85,11 +85,19 @@
 }
 
 .card-dark h3 {
-  font-size: 0.75rem;
+  font-size: 0.95rem;
+  font-weight: 600;
   text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: #6e6e73;
+  letter-spacing: 0.06em;
+  color: #b0b0b8;
   margin-bottom: 0.75rem;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.card-icon {
+  font-size: 1.1rem;
 }
 
 .card-dark .value {
@@ -99,15 +107,27 @@
   line-height: 1.1;
 }
 
+.card-dark .value .unit {
+  font-size: 1.4rem;
+  font-weight: 500;
+  color: #8e8e93;
+  margin-left: 2px;
+}
+
+.card-dark .value-text {
+  font-size: 1.4rem;
+  padding-top: 0.5rem;
+}
+
 .card-dark .sub {
-  font-size: 0.9rem;
-  color: #a0a0a8;
+  font-size: 0.95rem;
+  color: #b0b0b8;
   margin-top: 0.25rem;
 }
 
 .card-dark .detail {
-  font-size: 0.85rem;
-  color: #6e6e73;
+  font-size: 0.9rem;
+  color: #8e8e93;
   margin-top: 0.5rem;
 }
 
