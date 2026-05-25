@@ -7,7 +7,10 @@ using HomeAutomation.MetOffice;
 using HomeAutomation.OctopusEnergy;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using Serilog;
 using System;
+using System.Linq;
 
 namespace HomeAutomation.Desktop;
 
@@ -18,8 +21,38 @@ sealed class Program
     [STAThread]
     public static void Main(string[] args)
     {
-        Services = ConfigureServices();
-        BuildAvaloniaApp().StartWithClassicDesktopLifetime(args);
+        try
+        {
+            ConfigureLogging();
+            Log.Information("=== HomeAutomation Desktop App Starting ===");
+            Services = ConfigureServices();
+            Log.Information("Services configured successfully");
+            BuildAvaloniaApp().StartWithClassicDesktopLifetime(args);
+        }
+        catch (Exception ex)
+        {
+            Log.Fatal(ex, "Application terminated unexpectedly");
+            throw;
+        }
+        finally
+        {
+            Log.Information("=== HomeAutomation Desktop App Shutting Down ===");
+            Log.CloseAndFlush();
+        }
+    }
+
+    private static void ConfigureLogging()
+    {
+        var logPath = System.IO.Path.Combine(AppContext.BaseDirectory, "logs", "app-.txt");
+        Log.Logger = new LoggerConfiguration()
+            .MinimumLevel.Debug()
+            .WriteTo.Console(outputTemplate: "[{Timestamp:HH:mm:ss} {Level:u3}] {Message:lj}{NewLine}{Exception}")
+            .WriteTo.File(logPath,
+                outputTemplate: "[{Timestamp:yyyy-MM-dd HH:mm:ss} {Level:u3}] {Message:lj}{NewLine}{Exception}",
+                rollingInterval: RollingInterval.Day,
+                fileSizeLimitBytes: 10_000_000,
+                retainedFileCountLimit: 10)
+            .CreateLogger();
     }
 
     public static AppBuilder BuildAvaloniaApp()
@@ -37,9 +70,18 @@ sealed class Program
             .SetBasePath(AppContext.BaseDirectory)
             .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
 
+        if (OperatingSystem.IsWindows())
+        {
+            Log.Debug("Loading user secrets");
+            builder.AddUserSecrets<Program>();
+        }
+
         var configuration = builder.Build();
+        Log.Debug("Configuration loaded. Services: {@Services}",
+            configuration.GetSection("Services").AsEnumerable().Where(x => x.Value != null));
 
         var services = new ServiceCollection();
+        services.AddLogging(loggingBuilder => loggingBuilder.AddSerilog());
 
         // Register configuration options
         services

@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "web",
+      "runtimeExecutable": "dotnet",
+      "runtimeArgs": ["run", "--project", "HomeAutomation.Web", "--configuration", "Debug"],
+      "port": 5165
+    }
+  ]
+}

@@ -8,6 +8,7 @@ using Avalonia.Markup.Xaml;
 using HomeAutomation.Desktop.ViewModels;
 using HomeAutomation.Desktop.Views;
 using Microsoft.Extensions.DependencyInjection;
+using Serilog;
 
 namespace HomeAutomation.Desktop;
 
@@ -20,15 +21,29 @@ public partial class App : Avalonia.Application
 
     public override void OnFrameworkInitializationCompleted()
     {
-        if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
+        try
         {
-            var viewModel = Program.Services?.GetService(typeof(DashboardViewModel)) as DashboardViewModel
-                ?? new DashboardViewModel();
+            Log.Information("OnFrameworkInitializationCompleted starting");
 
-            desktop.MainWindow = new MainWindow
+            if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
             {
-                DataContext = viewModel,
-            };
+                Log.Debug("Resolving DashboardViewModel from DI container");
+                var viewModel = Program.Services?.GetService(typeof(DashboardViewModel)) as DashboardViewModel
+                    ?? new DashboardViewModel();
+
+                Log.Information("Creating MainWindow with DashboardViewModel");
+                desktop.MainWindow = new MainWindow
+                {
+                    DataContext = viewModel,
+                };
+            }
+
+            Log.Information("OnFrameworkInitializationCompleted completed");
+        }
+        catch (Exception ex)
+        {
+            Log.Fatal(ex, "Error during framework initialization");
+            throw;
         }
 
         base.OnFrameworkInitializationCompleted();
