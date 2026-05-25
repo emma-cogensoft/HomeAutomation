@@ -22,10 +22,10 @@ public class OctopusEnergyApiAccessor : IOctopusEnergyApiAccessor
             var periodFrom = now.AddHours(-1);
             var periodTo = now.AddHours(_options.HoursAhead);
 
-            var productCode = _options.Tariff.Split('-')[0];
+            var tariffCode = $"E-1R-{_options.Tariff}-{_options.RegionCode}";
             var url =
-                $"https://api.octopusenergy.com/v1/products/{productCode}/electricity-tariffs/{_options.Tariff}{_options.RegionCode}/standard-unit-rates/" +
-                $"?period_from={periodFrom:O}&period_to={periodTo:O}";
+                $"https://api.octopus.energy/v1/products/{_options.Tariff}/electricity-tariffs/{tariffCode}/standard-unit-rates/" +
+                $"?page_size=1500";
 
             using var request = new HttpRequestMessage(HttpMethod.Get, url);
 
@@ -42,15 +42,15 @@ public class OctopusEnergyApiAccessor : IOctopusEnergyApiAccessor
                 jsonContent,
                 new System.Text.Json.JsonSerializerOptions { PropertyNameCaseInsensitive = true });
 
-            if (octopusResponse?.Results?.Results == null || octopusResponse.Results.Results.Count == 0)
+            if (octopusResponse?.Results == null || octopusResponse.Results.Count == 0)
             {
                 throw new OctopusEnergyException("No price data returned from Octopus Energy API");
             }
 
-            var prices = octopusResponse.Results.Results
+            var prices = octopusResponse.Results
                 .Select(p => new EnergyPrice(
                     p.ValidFrom,
-                    p.ValidTo,
+                    p.ValidTo ?? DateTime.MaxValue,
                     p.VatInclusivePrice,
                     p.VatExclusivePrice))
                 .OrderBy(p => p.ValidFrom)

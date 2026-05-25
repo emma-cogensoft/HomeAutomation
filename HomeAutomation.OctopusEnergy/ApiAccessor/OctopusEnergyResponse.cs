@@ -3,11 +3,6 @@ using HomeAutomation.Application.Services.EnergyPricing;
 namespace HomeAutomation.OctopusEnergy.ApiAccessor;
 
 public record OctopusEnergyPriceResponse(
-    string Url,
-    Result Results
-);
-
-public record Result(
     int Count,
     string? Next,
     string? Previous,
@@ -15,8 +10,12 @@ public record Result(
 );
 
 public record PricePoint(
+    [property: System.Text.Json.Serialization.JsonPropertyName("value_inc_vat")]
     decimal VatInclusivePrice,
+    [property: System.Text.Json.Serialization.JsonPropertyName("value_exc_vat")]
     decimal VatExclusivePrice,
+    [property: System.Text.Json.Serialization.JsonPropertyName("valid_from")]
     DateTime ValidFrom,
-    DateTime ValidTo
+    [property: System.Text.Json.Serialization.JsonPropertyName("valid_to")]
+    DateTime? ValidTo
 );
