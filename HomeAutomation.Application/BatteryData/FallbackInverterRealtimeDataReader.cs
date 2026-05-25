@@ -31,6 +31,8 @@ public class FallbackInverterRealtimeDataReader : IInverterRealtimeDataReader
 
     public async Task<InverterRealtimeData> GetInverterRealtimeDataAsync(CancellationToken cancellationToken)
     {
+        _logger.LogInformation("GetInverterRealtimeDataAsync called");
+
         if (_circuitBreaker.IsOpen)
         {
             _logger.LogWarning("Inverter circuit breaker is open — skipping inverter calls");
@@ -41,10 +43,12 @@ public class FallbackInverterRealtimeDataReader : IInverterRealtimeDataReader
         {
             var result = await TryGetDataAsync(cancellationToken);
             _circuitBreaker.RecordSuccess();
+            _logger.LogInformation("Inverter data retrieved successfully");
             return result;
         }
-        catch (Exception)
+        catch (Exception ex)
         {
+            _logger.LogError(ex, "Both local and cloud inverter readers failed");
             _circuitBreaker.RecordFailure();
             throw;
         }
@@ -52,14 +56,27 @@ public class FallbackInverterRealtimeDataReader : IInverterRealtimeDataReader
 
     private async Task<InverterRealtimeData> TryGetDataAsync(CancellationToken cancellationToken)
     {
+        _logger.LogDebug("Attempting to get inverter data from local reader");
         try
         {
-            return await _localReader.GetInverterRealtimeDataAsync(cancellationToken);
+            var result = await _localReader.GetInverterRealtimeDataAsync(cancellationToken);
+            _logger.LogInformation("✓ Local inverter succeeded");
+            return result;
         }
         catch (Exception ex)
         {
-            _logger.LogWarning(ex, "Local inverter unreachable, falling back to cloud API");
-            return await _cloudReader.GetInverterRealtimeDataAsync(cancellationToken);
+            _logger.LogWarning(ex, "✗ Local inverter failed ({ExceptionType}), attempting cloud inverter fallback", ex.GetType().Name);
+            try
+            {
+                var result = await _cloudReader.GetInverterRealtimeDataAsync(cancellationToken);
+                _logger.LogInformation("✓ Cloud inverter fallback succeeded");
+                return result;
+            }
+            catch (Exception cloudEx)
+            {
+                _logger.LogError(cloudEx, "✗ Cloud inverter fallback also failed ({ExceptionType})", cloudEx.GetType().Name);
+                throw;
+            }
         }
     }
 }

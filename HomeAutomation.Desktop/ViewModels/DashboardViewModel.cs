@@ -73,6 +73,21 @@ public partial class DashboardViewModel : ViewModelBase
         _ = RefreshAsync();
     }
 
+    private async Task<CurrentInverterSettings?> FetchInverterSettingsWithFallback(CancellationToken cancellationToken)
+    {
+        if (_mediator == null) return null;
+
+        try
+        {
+            return await _mediator.Send(new GetInverterSettings(), cancellationToken);
+        }
+        catch (Exception ex)
+        {
+            _logger?.LogWarning(ex, "Failed to fetch inverter settings, continuing without update");
+            return null;
+        }
+    }
+
     private void InitializeRefreshTimer()
     {
         _refreshTimer = new DispatcherTimer
@@ -114,7 +129,7 @@ public partial class DashboardViewModel : ViewModelBase
             var weatherTask = _mediator.Send(new GetWeatherForecast(), _refreshCancellation.Token);
 
             _logger?.LogDebug("Fetching inverter settings...");
-            var inverterTask = _mediator.Send(new GetInverterSettings(), _refreshCancellation.Token);
+            var inverterTask = FetchInverterSettingsWithFallback(_refreshCancellation.Token);
 
             _logger?.LogDebug("Fetching energy pricing...");
             var pricingTask = _mediator.Send(new GetEnergyPricing(), _refreshCancellation.Token);
