@@ -47,8 +47,7 @@ interface EnergyPricingData {
   currentUnitRatePence: number | null;
   currentPeriod: EnergyPriceDetail | null;
   nextCheapestPeriod: EnergyPriceDetail | null;
-  averageRate: number | null;
-  averageRatePence: number | null;
+  prices24H: EnergyPriceDetail[];
 }
 
 interface DashboardState {
