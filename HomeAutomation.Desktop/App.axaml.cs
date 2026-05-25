@@ -7,6 +7,7 @@ using System;
 using Avalonia.Markup.Xaml;
 using HomeAutomation.Desktop.ViewModels;
 using HomeAutomation.Desktop.Views;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace HomeAutomation.Desktop;
 
@@ -21,8 +22,8 @@ public partial class App : Avalonia.Application
     {
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
-            var viewModel = Program.Services?.GetService(typeof(MainWindowViewModel)) as MainWindowViewModel
-                ?? new MainWindowViewModel();
+            var viewModel = Program.Services?.GetService(typeof(DashboardViewModel)) as DashboardViewModel
+                ?? new DashboardViewModel();
 
             desktop.MainWindow = new MainWindow
             {

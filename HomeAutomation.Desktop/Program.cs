@@ -1,6 +1,7 @@
 using Avalonia;
 using HomeAutomation.Application;
 using HomeAutomation.CloudInverter;
+using HomeAutomation.Desktop.ViewModels;
 using HomeAutomation.LocalInverter;
 using HomeAutomation.MetOffice;
 using HomeAutomation.OctopusEnergy;
@@ -71,6 +72,14 @@ sealed class Program
         services.RegisterLocalInverterServices();
         services.RegisterWeatherServices();
         services.RegisterOctopusEnergyServices();
+
+        // Register ViewModels
+        services.AddScoped<DashboardViewModel>();
+        services.AddScoped<BatteryViewModel>();
+        services.AddScoped<WeatherViewModel>();
+        services.AddScoped<InverterViewModel>();
+        services.AddScoped<EnergyPricingViewModel>();
+        services.AddScoped<MainWindowViewModel>();
 
         return services.BuildServiceProvider();
     }

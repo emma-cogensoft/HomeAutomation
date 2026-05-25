@@ -3,18 +3,123 @@
         xmlns:vm="using:HomeAutomation.Desktop.ViewModels"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        mc:Ignorable="d" d:DesignWidth="1280" d:DesignHeight="800"
         x:Class="HomeAutomation.Desktop.Views.MainWindow"
-        x:DataType="vm:MainWindowViewModel"
-        Icon="/Assets/avalonia-logo.ico"
-        Title="HomeAutomation.Desktop">
+        x:DataType="vm:DashboardViewModel"
+        Title="Home Automation Dashboard"
+        WindowStartupLocation="CenterScreen"
+        Background="#1e1e1e"
+        Foreground="#ffffff">
 
     <Design.DataContext>
-        <!-- This only sets the DataContext for the previewer in an IDE,
-             to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs) -->
-        <vm:MainWindowViewModel/>
+        <vm:DashboardViewModel/>
     </Design.DataContext>
 
-    <TextBlock Text="{Binding Greeting}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+    <StackPanel Spacing="0" Background="#1e1e1e">
+        <!-- Loading Indicator -->
+        <ProgressBar IsIndeterminate="{Binding IsLoading}"
+                     Height="4" Background="Transparent" Foreground="#4CAF50"
+                     IsVisible="{Binding IsLoading}"/>
+
+        <!-- Main Scrollable Content -->
+        <ScrollViewer>
+            <StackPanel Spacing="20" Background="#1e1e1e" Margin="20">
+
+                <!-- Header -->
+                <StackPanel Spacing="10">
+                    <TextBlock Text="Home Automation Dashboard" FontSize="28" FontWeight="Bold" Foreground="#ffffff"/>
+                </StackPanel>
+
+                <!-- Error Message -->
+                <Border Background="#d32f2f" Padding="15" CornerRadius="4"
+                        IsVisible="{Binding ErrorMessage, Converter={x:Static StringConverters.IsNotNullOrEmpty}}">
+                    <TextBlock Text="{Binding ErrorMessage}" Foreground="#ffffff" TextWrapping="Wrap"/>
+                </Border>
+
+                <!-- Dashboard Cards Grid -->
+                <Grid ColumnDefinitions="*,*,*" RowDefinitions="auto,auto">
+
+                    <!-- Battery Card -->
+                    <Border Grid.Row="0" Grid.Column="0" Background="#2d2d2d" CornerRadius="8" Padding="20" BorderBrush="#444" BorderThickness="1" Margin="0,0,15,15">
+                        <StackPanel Spacing="10">
+                            <TextBlock Text="Battery Status" FontSize="18" FontWeight="Bold" Foreground="#ffffff"/>
+                            <TextBlock Text="{Binding Battery.StatusBadge}" FontSize="16" Foreground="#4CAF50"/>
+                            <StackPanel Spacing="5">
+                                <TextBlock Text="Charge" FontSize="12" Foreground="#999999"/>
+                                <TextBlock Text="{Binding Battery.PercentageCharged}" FontSize="24" FontWeight="Bold" Foreground="#ffffff"/>
+                            </StackPanel>
+                            <StackPanel Spacing="5">
+                                <TextBlock Text="Remaining" FontSize="12" Foreground="#999999"/>
+                                <TextBlock Text="{Binding Battery.RemainingWh}" FontSize="20" Foreground="#ffffff"/>
+                            </StackPanel>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Weather Card -->
+                    <Border Grid.Row="0" Grid.Column="1" Background="#2d2d2d" CornerRadius="8" Padding="20" BorderBrush="#444" BorderThickness="1" Margin="0,0,15,15">
+                        <StackPanel Spacing="10">
+                            <TextBlock Text="Weather" FontSize="18" FontWeight="Bold" Foreground="#ffffff"/>
+                            <TextBlock Text="{Binding Weather.WeatherBadge}" FontSize="16" Foreground="#FFC107"/>
+                            <TextBlock Text="{Binding Weather.WeatherDescription}" FontSize="14" Foreground="#cccccc" Margin="0,10,0,0"/>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Energy Pricing Card -->
+                    <Border Grid.Row="0" Grid.Column="2" Background="#2d2d2d" CornerRadius="8" Padding="20" BorderBrush="#444" BorderThickness="1" Margin="0,0,0,15">
+                        <StackPanel Spacing="10">
+                            <TextBlock Text="Energy Price" FontSize="18" FontWeight="Bold" Foreground="#ffffff"/>
+                            <TextBlock Text="{Binding EnergyPricing.PriceStatusBadge}" FontSize="16" Foreground="#FF9800"/>
+                            <StackPanel Spacing="5" Margin="0,10,0,0">
+                                <TextBlock Text="Current Rate" FontSize="12" Foreground="#999999"/>
+                                <TextBlock Text="{Binding EnergyPricing.CurrentUnitRatePence}" FontWeight="Bold" Foreground="#ffffff" FontSize="16"/>
+                            </StackPanel>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Solar Input Card -->
+                    <Border Grid.Row="1" Grid.Column="0" Background="#2d2d2d" CornerRadius="8" Padding="20" BorderBrush="#444" BorderThickness="1" Margin="0,0,15,0">
+                        <StackPanel Spacing="10">
+                            <TextBlock Text="Solar Input" FontSize="18" FontWeight="Bold" Foreground="#ffffff"/>
+                            <TextBlock Text="☀ Generating" FontSize="16" Foreground="#FFC107"/>
+                            <StackPanel Spacing="5" Margin="0,10,0,0">
+                                <TextBlock Text="Power" FontSize="12" Foreground="#999999"/>
+                                <TextBlock Text="{Binding Battery.SolarInputInW}" FontWeight="Bold" Foreground="#ffffff" FontSize="20"/>
+                            </StackPanel>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Home Usage Card -->
+                    <Border Grid.Row="1" Grid.Column="1" Background="#2d2d2d" CornerRadius="8" Padding="20" BorderBrush="#444" BorderThickness="1" Margin="0,0,15,0">
+                        <StackPanel Spacing="10">
+                            <TextBlock Text="Home Usage" FontSize="18" FontWeight="Bold" Foreground="#ffffff"/>
+                            <TextBlock Text="⚡ Active" FontSize="16" Foreground="#2196F3"/>
+                            <TextBlock Text="{Binding Battery.HomeUsageInW}" FontWeight="Bold" Foreground="#ffffff" FontSize="24" Margin="0,10,0,0"/>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Inverter Settings Card -->
+                    <Border Grid.Row="1" Grid.Column="2" Background="#2d2d2d" CornerRadius="8" Padding="20" BorderBrush="#444" BorderThickness="1">
+                        <StackPanel Spacing="10">
+                            <TextBlock Text="Inverter Mode" FontSize="18" FontWeight="Bold" Foreground="#ffffff"/>
+                            <TextBlock Text="{Binding Inverter.CurrentSettingName}" FontSize="16" Foreground="#9C27B0"/>
+                            <StackPanel Spacing="5" Margin="0,10,0,0">
+                                <TextBlock Text="Min Battery" FontSize="12" Foreground="#999999"/>
+                                <TextBlock Text="{Binding Inverter.MinimumBatteryPercentage}" Foreground="#cccccc" FontSize="13"/>
+                            </StackPanel>
+                        </StackPanel>
+                    </Border>
+
+                </Grid>
+
+                <!-- Footer -->
+                <StackPanel Orientation="Horizontal" Spacing="20" Margin="0,20,0,0">
+                    <TextBlock Text="{Binding Battery.DataSource}" FontSize="12" Foreground="#666666"/>
+                    <TextBlock Text="{Binding LastUpdated}" FontSize="12" Foreground="#666666"/>
+                </StackPanel>
+
+            </StackPanel>
+        </ScrollViewer>
+
+    </StackPanel>
 
 </Window>
