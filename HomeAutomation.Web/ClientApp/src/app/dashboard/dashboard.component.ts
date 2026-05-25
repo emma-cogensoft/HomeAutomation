@@ -32,10 +32,30 @@ interface InverterData {
   currentSettingName: string;
 }
 
+interface EnergyPriceDetail {
+  validFrom: Date;
+  validTo: Date;
+  unitRateInclVat: number;
+  unitRateInclVatPence: number;
+  isActive: boolean;
+  isCheapest: boolean;
+}
+
+interface EnergyPricingData {
+  isLoading: boolean;
+  currentUnitRate: number | null;
+  currentUnitRatePence: number | null;
+  currentPeriod: EnergyPriceDetail | null;
+  nextCheapestPeriod: EnergyPriceDetail | null;
+  averageRate: number | null;
+  averageRatePence: number | null;
+}
+
 interface DashboardState {
   battery: BatteryData;
   weather: WeatherData;
   inverter: InverterData;
+  energyPricing: EnergyPricingData;
   isLoading: boolean;
   lastUpdated: Date | null;
 }
@@ -55,6 +75,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     battery: <BatteryData>{ isLoading: true },
     weather: <WeatherData>{ isLoading: true },
     inverter: <InverterData>{ isLoading: true },
+    energyPricing: <EnergyPricingData>{ isLoading: true },
     isLoading: true,
     lastUpdated: null
   };
@@ -79,13 +100,15 @@ export class DashboardComponent implements OnInit, OnDestroy {
     forkJoin({
       battery: this.http.get<BatteryData>(this.baseUrl + 'api/battery'),
       weather: this.http.get<WeatherData>(this.baseUrl + 'api/forecast'),
-      inverter: this.http.get<InverterData>(this.baseUrl + 'api/invertersettings')
+      inverter: this.http.get<InverterData>(this.baseUrl + 'api/invertersettings'),
+      energyPricing: this.http.get<EnergyPricingData>(this.baseUrl + 'api/energypricing')
     }).subscribe({
-      next: ({ battery, weather, inverter }) => {
+      next: ({ battery, weather, inverter, energyPricing }) => {
         this.state = {
           battery,
           weather,
           inverter,
+          energyPricing: energyPricing || <EnergyPricingData>{ isLoading: false },
           isLoading: false,
           lastUpdated: new Date()
         };
@@ -110,6 +133,10 @@ export class DashboardComponent implements OnInit, OnDestroy {
     this.http.get<InverterData>(this.baseUrl + 'api/invertersettings').subscribe({
       next: inverter => { this.state.inverter = inverter; this.cdr.markForCheck(); },
       error: () => { this.state.inverter = <InverterData>{ isLoading: false, currentSettingName: 'Unavailable' }; this.cdr.markForCheck(); }
+    });
+    this.http.get<EnergyPricingData>(this.baseUrl + 'api/energypricing').subscribe({
+      next: energyPricing => { this.state.energyPricing = energyPricing; this.cdr.markForCheck(); },
+      error: () => { this.state.energyPricing = <EnergyPricingData>{ isLoading: false }; this.cdr.markForCheck(); }
     });
   }
 

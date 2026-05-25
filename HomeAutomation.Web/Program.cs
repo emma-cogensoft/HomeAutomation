@@ -2,6 +2,7 @@ using HomeAutomation.Application;
 using HomeAutomation.CloudInverter;
 using HomeAutomation.LocalInverter;
 using HomeAutomation.MetOffice;
+using HomeAutomation.OctopusEnergy;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -26,6 +27,11 @@ builder.Services
     .AddOptions<HomeAutomation.Application.BatteryData.BatteryOptions>()
     .Bind(builder.Configuration.GetSection("Services:BatteryOptions"));
 
+builder.Services
+    .AddOptions<OctopusEnergyApiOptions>()
+    .Bind(builder.Configuration.GetSection("Services:OctopusEnergyApiOptions"))
+    .ValidateDataAnnotations();
+
 builder.Services.AddControllersWithViews();
 
 builder.Services.AddProblemDetails();
@@ -34,6 +40,7 @@ builder.Services.RegisterApplicationServices();
 builder.Services.RegisterCloudInverterServices();
 builder.Services.RegisterLocalInverterServices();
 builder.Services.RegisterWeatherServices();
+builder.Services.RegisterOctopusEnergyServices();
 
 var app = builder.Build();
 

@@ -1,0 +1,286 @@
+/* Battery Component Styles - Large Tiles for Distance Visibility */
+
+:host {
+  --tile-bg: #2c2c2e;
+  --tile-border: #555;
+  --text-primary: #ffffff;
+  --text-secondary: #e0e0e0;
+  --accent-color: #ffc107;
+}
+
+h1 {
+  font-size: 3rem;
+  color: var(--text-primary);
+  margin: 0 0 2rem 0;
+  text-align: center;
+  font-weight: 600;
+}
+
+.battery-container {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2rem;
+  max-width: 100%;
+  margin: 0 auto;
+}
+
+/* Warning Banner */
+.warning-banner {
+  background: #fff3cd !important;
+  border: 2px solid #ffc107 !important;
+  padding: 1.5rem !important;
+  border-radius: 8px !important;
+  margin-bottom: 2rem !important;
+  font-size: 1.2rem !important;
+  color: #333 !important;
+  font-weight: 500;
+}
+
+/* Main Status Tile */
+.status-tile {
+  background: var(--tile-bg);
+  border: 2px solid var(--tile-border);
+  border-radius: 12px;
+  padding: 2.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.percentage-display {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+.percentage-value {
+  font-size: 4rem;
+  font-weight: bold;
+  color: var(--accent-color);
+  line-height: 1;
+}
+
+.percentage-label {
+  font-size: 1.5rem;
+  color: var(--text-secondary);
+}
+
+/* Power Usage Tile */
+.power-tile {
+  background: var(--tile-bg);
+  border: 2px solid var(--tile-border);
+  border-radius: 12px;
+  padding: 2rem;
+  text-align: center;
+}
+
+.power-label {
+  font-size: 1.2rem;
+  color: var(--text-secondary);
+  margin-bottom: 0.5rem;
+}
+
+.power-value {
+  font-size: 2.5rem;
+  font-weight: bold;
+  color: #00d4ff;
+}
+
+/* Activity Container */
+.activity-container {
+  background: var(--tile-bg);
+  border: 2px solid var(--tile-border);
+  border-radius: 12px;
+  padding: 2.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.activity-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1.5rem;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
+}
+
+.activity-title {
+  font-size: 1.8rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.icon-large {
+  width: 120px !important;
+  height: 120px !important;
+  display: block;
+  object-fit: contain;
+}
+
+.battery-icon {
+  width: 160px !important;
+  height: 160px !important;
+  display: block;
+  object-fit: contain;
+}
+
+.activity-details {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.detail-item {
+  font-size: 1.3rem;
+  color: var(--text-secondary);
+  padding: 1rem;
+  background: rgba(255, 193, 7, 0.1);
+  border-left: 4px solid var(--accent-color);
+  border-radius: 4px;
+}
+
+.detail-value {
+  font-weight: 600;
+  color: var(--accent-color);
+}
+
+/* Time Indicator Row */
+.time-indicator {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 1rem;
+  padding: 1rem;
+  background: rgba(0, 212, 255, 0.1);
+  border-radius: 8px;
+}
+
+.time-value {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #00d4ff;
+}
+
+.time-status-icon {
+  width: 80px;
+  height: 80px;
+  object-fit: contain;
+}
+
+/* Footer Info Tile */
+.footer-tile {
+  background: var(--tile-bg);
+  border: 2px solid var(--tile-border);
+  border-radius: 12px;
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.footer-item {
+  font-size: 1.1rem;
+  color: var(--text-secondary);
+}
+
+.footer-label {
+  color: var(--text-secondary);
+}
+
+.footer-value {
+  font-weight: 600;
+  color: var(--accent-color);
+}
+
+/* Loading State */
+.loading-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 400px;
+  font-size: 1.5rem;
+  color: var(--text-secondary);
+}
+
+/* Responsive Design */
+@media (min-width: 768px) {
+  .battery-container {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  h1 {
+    grid-column: 1 / -1;
+  }
+
+  .warning-banner {
+    grid-column: 1 / -1;
+  }
+
+  .status-tile {
+    grid-column: 1 / -1;
+  }
+
+  .activity-container {
+    grid-column: 1 / -1;
+  }
+
+  .footer-tile {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (min-width: 1024px) {
+  .battery-container {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  h1 {
+    font-size: 3.5rem;
+  }
+
+  .percentage-value {
+    font-size: 5rem;
+  }
+
+  .activity-container {
+    grid-column: 1 / -1;
+  }
+
+  .footer-tile {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (max-width: 480px) {
+  h1 {
+    font-size: 2rem;
+  }
+
+  .status-tile,
+  .power-tile,
+  .activity-container,
+  .footer-tile {
+    padding: 1.5rem;
+  }
+
+  .percentage-value {
+    font-size: 3rem;
+  }
+
+  .power-value {
+    font-size: 2rem;
+  }
+
+  .icon-large {
+    width: 80px;
+    height: 80px;
+  }
+
+  .battery-icon {
+    width: 100px;
+    height: 100px;
+  }
+}

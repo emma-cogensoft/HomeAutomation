@@ -1,64 +1,116 @@
 <h1>Battery Level</h1>
 
-<p *ngIf="batteryData.isLoading"><em>Loading...</em></p>
+<div *ngIf="batteryData.isLoading" class="loading-container">
+  <em>Loading...</em>
+</div>
 
-<div *ngIf="!batteryData.isLoading">
+<div *ngIf="!batteryData.isLoading" class="battery-container">
 
-  <div *ngIf="batteryData.dataSource === 'CloudInverter'" style="background:#fff3cd;border:1px solid #ffc107;padding:8px 12px;border-radius:4px;margin-bottom:12px;">
+  <div *ngIf="batteryData.dataSource === 'CloudInverter'" class="warning-banner">
     ⚠️ Local inverter unreachable — showing cloud data (may be slightly delayed)
   </div>
 
-  <p> {{ batteryData.percentageCharged }}% </p>
-  <p> {{ batteryData.batteryPowerUsageInW }}W </p>
-
-  <div *ngIf="batteryData.activityDescription == 'Charging'">
-    <p>Battery is charging</p>
-    <img ngSrc="assets/icons/arrow-up.svg" alt="Charging battery"
-         height="32" width="32"/>
-    <img *ngIf="batteryData.stateDescription == 'Full'"
-         ngSrc="assets/icons/battery-full.svg" alt="Full battery"
-         height="32" width="32"/>
-
-    <img *ngIf=" batteryData.stateDescription != 'Full'"
-         ngSrc="assets/icons/battery-charging.svg" alt="Charging battery"
-         height="32" width="32"/>
-
-    <p>Remaining charge until 100%: {{ batteryData.remainingBatteryCapacityInWh }}Wh</p>
-    <p>Time to charge battery at current rate: {{ batteryData.timeToCompleteInH }} hours</p>
-
+  <!-- Main Percentage Tile -->
+  <div class="status-tile">
+    <div class="percentage-display">
+      <div class="percentage-value">{{ batteryData.percentageCharged }}%</div>
+      <div class="percentage-label">Battery Charged</div>
+    </div>
   </div>
 
-  <div *ngIf="batteryData.activityDescription == 'Discharging'">
-    <img ngSrc="assets/icons/arrow-down.svg" alt="Draining battery"
-         height="32" width="32"/>
-    <p>Battery is draining</p>
-
-    <img *ngIf="batteryData.stateDescription == 'Partially Full'"
-         ngSrc="assets/icons/battery-half.svg" alt="Partially full battery"
-         height="32" width="32"/>
-
-    <img *ngIf="batteryData.stateDescription == 'Empty'"
-         ngSrc="assets/icons/battery.svg" alt="Empty battery"
-         height="32" width="32"/>
-
-    <img *ngIf="batteryData.stateDescription == 'Full'"
-         ngSrc="assets/icons/battery-full.svg" alt="Full battery"
-         height="32" width="32"/>
-
-    <p>Remaining charge until 10%: {{ batteryData.remainingBatteryCapacityInWh }}Wh</p>
-    <p>Time to drain battery to 10% at current rate: {{ batteryData.timeToCompleteInH }}
-      hours
-      <span *ngIf="batteryData.timeToCompleteInH > 12">
-        <img ngSrc="assets/icons/check-circle.svg" alt="Ok"
-             height="32" width="32"/>
-      </span>
-      <span *ngIf="batteryData.timeToCompleteInH < 12">
-        <img ngSrc="assets/icons/exclamation-triangle.svg" alt="Not ok"
-             height="32" width="32"/>
-      </span>
-    </p>
+  <!-- Power Usage Tile -->
+  <div class="power-tile">
+    <div class="power-label">Current Power</div>
+    <div class="power-value">{{ batteryData.batteryPowerUsageInW }}W</div>
   </div>
 
-  <p>as at {{ batteryData.timeStamp }}</p>
-  <p>Battery size: {{ batteryData.totalBatteryCapacityInWh }}kWh</p>
+  <!-- Activity Tile -->
+  <div class="activity-container">
+    <div *ngIf="batteryData.activityDescription == 'Charging'">
+      <div class="activity-header">
+        <div style="display: flex; align-items: center; gap: 1rem;">
+          <img ngSrc="assets/icons/arrow-up.svg" alt="Charging battery" class="icon-large" style="width: 120px; height: 120px; display: block;"/>
+          <div class="activity-title">Charging</div>
+        </div>
+      </div>
+
+      <div class="activity-details">
+        <div class="detail-item">
+          Battery State: <span class="detail-value">{{ batteryData.stateDescription }}</span>
+        </div>
+
+        <img *ngIf="batteryData.stateDescription == 'Full'"
+             ngSrc="assets/icons/battery-full.svg" alt="Full battery"
+             class="battery-icon" style="margin: 0 auto; width: 160px; height: 160px; display: block;"/>
+
+        <img *ngIf="batteryData.stateDescription != 'Full'"
+             ngSrc="assets/icons/battery-charging.svg" alt="Charging battery"
+             class="battery-icon" style="margin: 0 auto; width: 160px; height: 160px; display: block;"/>
+
+        <div class="detail-item">
+          Remaining until 100%: <span class="detail-value">{{ batteryData.remainingBatteryCapacityInWh }}Wh</span>
+        </div>
+
+        <div class="detail-item">
+          Time to Full: <span class="detail-value">{{ batteryData.timeToCompleteInH }} hours</span>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="batteryData.activityDescription == 'Discharging'">
+      <div class="activity-header">
+        <div style="display: flex; align-items: center; gap: 1rem;">
+          <img ngSrc="assets/icons/arrow-down.svg" alt="Draining battery" class="icon-large" style="width: 120px; height: 120px; display: block;"/>
+          <div class="activity-title">Discharging</div>
+        </div>
+      </div>
+
+      <div class="activity-details">
+        <div class="detail-item">
+          Battery State: <span class="detail-value">{{ batteryData.stateDescription }}</span>
+        </div>
+
+        <img *ngIf="batteryData.stateDescription == 'Partially Full'"
+             ngSrc="assets/icons/battery-half.svg" alt="Partially full battery"
+             class="battery-icon" style="margin: 0 auto; width: 160px; height: 160px; display: block;"/>
+
+        <img *ngIf="batteryData.stateDescription == 'Empty'"
+             ngSrc="assets/icons/battery.svg" alt="Empty battery"
+             class="battery-icon" style="margin: 0 auto; width: 160px; height: 160px; display: block;"/>
+
+        <img *ngIf="batteryData.stateDescription == 'Full'"
+             ngSrc="assets/icons/battery-full.svg" alt="Full battery"
+             class="battery-icon" style="margin: 0 auto; width: 160px; height: 160px; display: block;"/>
+
+        <div class="detail-item">
+          Remaining until 10%: <span class="detail-value">{{ batteryData.remainingBatteryCapacityInWh }}Wh</span>
+        </div>
+
+        <div class="time-indicator">
+          <div>
+            <div style="font-size: 1rem; color: var(--text-secondary); margin-bottom: 0.5rem;">Time until 10%</div>
+            <div class="time-value">{{ batteryData.timeToCompleteInH }} hours</div>
+          </div>
+          <span *ngIf="batteryData.timeToCompleteInH > 12">
+            <img ngSrc="assets/icons/check-circle.svg" alt="Ok"
+                 class="time-status-icon" style="width: 80px; height: 80px; display: block;"/>
+          </span>
+          <span *ngIf="batteryData.timeToCompleteInH <= 12">
+            <img ngSrc="assets/icons/exclamation-triangle.svg" alt="Not ok"
+                 class="time-status-icon" style="width: 80px; height: 80px; display: block;"/>
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer Information Tile -->
+  <div class="footer-tile">
+    <div class="footer-item">
+      <span class="footer-label">Last Updated:</span> {{ batteryData.timeStamp }}
+    </div>
+    <div class="footer-item">
+      <span class="footer-label">Total Battery Capacity:</span> <span class="footer-value">{{ batteryData.totalBatteryCapacityInWh }}kWh</span>
+    </div>
+  </div>
 </div>

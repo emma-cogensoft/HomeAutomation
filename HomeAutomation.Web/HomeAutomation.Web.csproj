@@ -32,6 +32,7 @@
       <ProjectReference Include="..\HomeAutomation.CloudInverter\HomeAutomation.CloudInverter.csproj" />
       <ProjectReference Include="..\HomeAutomation.LocalInverter\HomeAutomation.LocalInverter.csproj" />
       <ProjectReference Include="..\HomeAutomation.MetOffice\HomeAutomation.MetOffice.csproj" />
+      <ProjectReference Include="..\HomeAutomation.OctopusEnergy\HomeAutomation.OctopusEnergy.csproj" />
     </ItemGroup>
 
     <ItemGroup>
