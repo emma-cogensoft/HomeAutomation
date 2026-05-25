@@ -34,9 +34,20 @@
     <div class="cards">
 
       <!-- Battery card -->
-      <div class="card-dark">
-        <h3>Battery</h3>
-        <div class="value">{{ state.battery.percentageCharged }}%</div>
+      <div class="card-dark"
+           [class.status-good]="state.battery.percentageCharged >= 50"
+           [class.status-warning]="state.battery.percentageCharged >= 20 && state.battery.percentageCharged < 50"
+           [class.status-critical]="state.battery.percentageCharged < 20">
+        <div class="card-header">
+          <h3><span class="card-icon">🔋</span> Battery</h3>
+          <span class="status-badge"
+                [class.good]="state.battery.percentageCharged >= 50"
+                [class.warning]="state.battery.percentageCharged >= 20 && state.battery.percentageCharged < 50"
+                [class.critical]="state.battery.percentageCharged < 20">
+            {{ state.battery.percentageCharged >= 50 ? '✓ Good' : state.battery.percentageCharged >= 20 ? '⚠ Low' : '🔴 Critical' }}
+          </span>
+        </div>
+        <div class="value">{{ state.battery.percentageCharged }}<span class="unit">%</span></div>
         <div class="sub">{{ state.battery.activityDescription }}</div>
         <div class="battery-bar-bg">
           <div class="battery-bar-fill"
@@ -49,13 +60,22 @@
           {{ state.battery.activityDescription === 'Charging' ? 'Full in' : 'Empty in' }}
           ~{{ state.battery.timeToCompleteInH | number:'1.1-1' }}h
         </div>
-        <div class="detail">{{ state.battery.remainingBatteryCapacityInWh | number }}Wh remaining</div>
+        <div class="detail">{{ state.battery.remainingBatteryCapacityInWh | number }} Wh remaining</div>
       </div>
 
       <!-- Weather card -->
-      <div class="card-dark">
-        <h3>Weather</h3>
-        <div class="value" style="font-size:3rem">
+      <div class="card-dark"
+           [class.status-good]="state.weather.isSunny"
+           [class.status-warning]="!state.weather.isSunny">
+        <div class="card-header">
+          <h3><span class="card-icon">🌤️</span> Weather</h3>
+          <span class="status-badge"
+                [class.good]="state.weather.isSunny"
+                [class.warning]="!state.weather.isSunny">
+            {{ state.weather.isSunny ? '✓ Sunny' : '⚠ Cloudy' }}
+          </span>
+        </div>
+        <div class="value" style="font-size:5rem">
           <ng-container *ngIf="state.weather.isSunny">☀️</ng-container>
           <ng-container *ngIf="!state.weather.isSunny">🌥️</ng-container>
         </div>
@@ -63,37 +83,92 @@
       </div>
 
       <!-- Home usage card -->
-      <div class="card-dark">
-        <h3>Home Usage</h3>
-        <div class="value">{{ state.battery.homeUsageInW >= 0 ? state.battery.homeUsageInW : 0 }}W</div>
+      <div class="card-dark"
+           [class.status-good]="state.battery.homeUsageInW < 2000"
+           [class.status-warning]="state.battery.homeUsageInW >= 2000 && state.battery.homeUsageInW < 4000"
+           [class.status-critical]="state.battery.homeUsageInW >= 4000">
+        <div class="card-header">
+          <h3><span class="card-icon">🏠</span> Home Usage</h3>
+          <span class="status-badge"
+                [class.good]="state.battery.homeUsageInW < 2000"
+                [class.warning]="state.battery.homeUsageInW >= 2000 && state.battery.homeUsageInW < 4000"
+                [class.critical]="state.battery.homeUsageInW >= 4000">
+            {{ state.battery.homeUsageInW < 2000 ? '✓ Low' : state.battery.homeUsageInW < 4000 ? '⚠ High' : '🔴 Very High' }}
+          </span>
+        </div>
+        <div class="value">{{ state.battery.homeUsageInW >= 0 ? state.battery.homeUsageInW : 0 }}<span class="unit">W</span></div>
         <div class="sub">Current consumption</div>
       </div>
 
       <!-- Grid card -->
-      <div class="card-dark">
-        <h3>Grid</h3>
+      <div class="card-dark"
+           [class.status-good]="state.battery.feedInW > 0"
+           [class.status-warning]="state.battery.feedInW >= -1000 && state.battery.feedInW <= 0"
+           [class.status-critical]="state.battery.feedInW < -1000">
+        <div class="card-header">
+          <h3><span class="card-icon">⚡</span> Grid</h3>
+          <span class="status-badge"
+                [class.good]="state.battery.feedInW > 0"
+                [class.warning]="state.battery.feedInW >= -1000 && state.battery.feedInW <= 0"
+                [class.critical]="state.battery.feedInW < -1000">
+            {{ state.battery.feedInW > 0 ? '✓ Exporting' : state.battery.feedInW >= -1000 ? '⚠ Importing' : '🔴 High Import' }}
+          </span>
+        </div>
         <ng-container *ngIf="state.battery.feedInW >= 0; else importingGrid">
-          <div class="value grid-export">{{ state.battery.feedInW }}W</div>
+          <div class="value grid-export">{{ state.battery.feedInW }}<span class="unit">W</span></div>
           <div class="sub">{{ state.battery.feedInW > 0 ? 'Exporting' : 'Grid idle' }}</div>
         </ng-container>
         <ng-template #importingGrid>
-          <div class="value grid-import">{{ state.battery.feedInW * -1 }}W</div>
+          <div class="value grid-import">{{ state.battery.feedInW * -1 }}<span class="unit">W</span></div>
           <div class="sub">Importing from grid</div>
         </ng-template>
       </div>
 
       <!-- Solar card -->
-      <div class="card-dark">
-        <h3>Solar</h3>
-        <div class="value">{{ (state.battery.solarInputInW > 0 ? state.battery.solarInputInW : 0) }}W</div>
+      <div class="card-dark"
+           [class.status-good]="state.battery.solarInputInW > 2000"
+           [class.status-warning]="state.battery.solarInputInW > 0 && state.battery.solarInputInW <= 2000"
+           [class.status-critical]="state.battery.solarInputInW <= 0">
+        <div class="card-header">
+          <h3><span class="card-icon">☀️</span> Solar</h3>
+          <span class="status-badge"
+                [class.good]="state.battery.solarInputInW > 2000"
+                [class.warning]="state.battery.solarInputInW > 0 && state.battery.solarInputInW <= 2000"
+                [class.critical]="state.battery.solarInputInW <= 0">
+            {{ state.battery.solarInputInW > 2000 ? '✓ Good Gen' : state.battery.solarInputInW > 0 ? '⚠ Low Gen' : '🔴 No Gen' }}
+          </span>
+        </div>
+        <div class="value">{{ (state.battery.solarInputInW > 0 ? state.battery.solarInputInW : 0) }}<span class="unit">W</span></div>
         <div class="sub">{{ state.battery.solarInputInW > 0 ? 'Generating' : 'No generation' }}</div>
       </div>
 
       <!-- Inverter card -->
       <div class="card-dark" *ngIf="inverterAvailable">
-        <h3>Inverter Mode</h3>
-        <div class="value" style="font-size:1.4rem; padding-top:0.5rem">
+        <h3><span class="card-icon">⚙️</span> Inverter Mode</h3>
+        <div class="value value-text">
           {{ state.inverter.currentSettingName }}
+        </div>
+      </div>
+
+      <!-- Energy Pricing card -->
+      <div class="card-dark"
+           [class.status-good]="(state.energyPricing.currentUnitRatePence ?? 0) < 20"
+           [class.status-warning]="(state.energyPricing.currentUnitRatePence ?? 0) >= 20 && (state.energyPricing.currentUnitRatePence ?? 0) < 30"
+           [class.status-critical]="(state.energyPricing.currentUnitRatePence ?? 0) >= 30"
+           *ngIf="!state.energyPricing.isLoading">
+        <div class="card-header">
+          <h3><span class="card-icon">💷</span> Energy Price</h3>
+          <span class="status-badge"
+                [class.good]="(state.energyPricing.currentUnitRatePence ?? 0) < 20"
+                [class.warning]="(state.energyPricing.currentUnitRatePence ?? 0) >= 20 && (state.energyPricing.currentUnitRatePence ?? 0) < 30"
+                [class.critical]="(state.energyPricing.currentUnitRatePence ?? 0) >= 30">
+            {{ (state.energyPricing.currentUnitRatePence ?? 0) < 20 ? '✓ Cheap' : (state.energyPricing.currentUnitRatePence ?? 0) < 30 ? '⚠ Medium' : '🔴 Expensive' }}
+          </span>
+        </div>
+        <div class="value">{{ formatPrice(state.energyPricing.currentUnitRatePence) }}<span class="unit">p/kWh</span></div>
+        <div class="sub">Current rate</div>
+        <div class="detail" *ngIf="state.energyPricing.nextCheapestPeriod">
+          Next cheap: {{ state.energyPricing.nextCheapestPeriod.validFrom | date:'HH:mm' }}
         </div>
       </div>
 

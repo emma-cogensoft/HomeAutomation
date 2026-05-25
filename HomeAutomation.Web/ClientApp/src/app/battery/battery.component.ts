@@ -4,7 +4,8 @@ import { HttpClient } from '@angular/common/http';
 @Component({
   standalone: false,
   selector: 'app-battery',
-  templateUrl: './battery.component.html'
+  templateUrl: './battery.component.html',
+  styleUrls: ['./battery.component.css']
 })
 export class BatteryComponent {
   public batteryData: Battery = <Battery>{ isLoading: true };
