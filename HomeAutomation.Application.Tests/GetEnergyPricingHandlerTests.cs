@@ -35,7 +35,7 @@ public class GetEnergyPricingHandlerTests
         // Assert
         Assert.NotNull(result);
         Assert.Equal(14.50m, result.CurrentUnitRate);
-        Assert.Equal(1450m, result.CurrentUnitRatePence);
+        Assert.Equal(14.50m, result.CurrentUnitRatePence);
         Assert.NotNull(result.CurrentPeriod);
         Assert.NotNull(result.NextCheapestPeriod);
         Assert.NotEmpty(result.Prices24H);
@@ -118,7 +118,7 @@ public class GetEnergyPricingHandlerTests
         // Assert
         Assert.NotNull(result);
         Assert.Equal(12.34m, result.CurrentUnitRate);
-        Assert.Equal(1234m, result.CurrentUnitRatePence);
+        Assert.Equal(12.34m, result.CurrentUnitRatePence);
         Assert.Equal(12.34m, result.CurrentPeriod!.UnitRateInclVat);
         Assert.Equal(1234m, result.CurrentPeriod.UnitRateInclVatPence);
     }
