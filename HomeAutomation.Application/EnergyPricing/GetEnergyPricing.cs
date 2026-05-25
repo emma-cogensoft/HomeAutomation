@@ -10,8 +10,6 @@ public record EnergyPricingResponse(
     decimal? CurrentUnitRatePence,
     EnergyPriceDetail? CurrentPeriod,
     EnergyPriceDetail? NextCheapestPeriod,
-    decimal? AverageRate,
-    decimal? AverageRatePence,
     List<EnergyPriceDetail> Prices24H
 );
 
@@ -73,8 +71,6 @@ public class GetEnergyPricingHandler : IRequestHandler<GetEnergyPricing, EnergyP
                     pricingData.NextCheapestPeriod.IsActive,
                     true)
                 : null,
-            pricingData.AverageRate,
-            pricingData.AverageRate * 100,
             prices24h
         );
     }
