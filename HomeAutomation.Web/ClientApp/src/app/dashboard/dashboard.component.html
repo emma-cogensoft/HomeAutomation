@@ -165,13 +165,10 @@
             {{ (state.energyPricing.currentUnitRatePence ?? 0) < 20 ? '✓ Cheap' : (state.energyPricing.currentUnitRatePence ?? 0) < 30 ? '⚠ Medium' : '🔴 Expensive' }}
           </span>
         </div>
-        <div class="value">{{ state.energyPricing.currentUnitRatePence?.toFixed(2) ?? 'N/A' }}<span class="unit">p/kWh</span></div>
+        <div class="value">{{ formatPrice(state.energyPricing.currentUnitRatePence) }}<span class="unit">p/kWh</span></div>
         <div class="sub">Current rate</div>
         <div class="detail" *ngIf="state.energyPricing.nextCheapestPeriod">
           Next cheap: {{ state.energyPricing.nextCheapestPeriod.validFrom | date:'HH:mm' }}
-        </div>
-        <div class="detail" *ngIf="state.energyPricing.averageRatePence">
-          24h avg: {{ state.energyPricing.averageRatePence.toFixed(2) }}p/kWh
         </div>
       </div>
 

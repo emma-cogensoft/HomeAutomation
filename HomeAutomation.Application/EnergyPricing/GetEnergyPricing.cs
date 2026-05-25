@@ -45,14 +45,14 @@ public class GetEnergyPricingHandler : IRequestHandler<GetEnergyPricing, EnergyP
                 p.ValidFrom,
                 p.ValidTo,
                 p.UnitRateInclVat,
-                p.UnitRateInclVat * 100,
+                p.UnitRateInclVat,
                 p.IsActive,
                 p.UnitRateInclVat == minPrice))
             .ToList();
 
         return new EnergyPricingResponse(
             pricingData.CurrentUnitRate,
-            pricingData.CurrentUnitRate * 100,
+            pricingData.CurrentUnitRate,
             pricingData.CurrentPrice != null
                 ? new EnergyPriceDetail(
                     pricingData.CurrentPrice.ValidFrom,

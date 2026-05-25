@@ -107,7 +107,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
           battery,
           weather,
           inverter,
-          energyPricing: energyPricing || <EnergyPricingData>{ isLoading: false },
+          energyPricing: energyPricing ? { ...energyPricing, isLoading: false } : <EnergyPricingData>{ isLoading: false },
           isLoading: false,
           lastUpdated: new Date()
         };
@@ -134,7 +134,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
       error: () => { this.state.inverter = <InverterData>{ isLoading: false, currentSettingName: 'Unavailable' }; this.cdr.markForCheck(); }
     });
     this.http.get<EnergyPricingData>(this.baseUrl + 'api/energypricing').subscribe({
-      next: energyPricing => { this.state.energyPricing = energyPricing; this.cdr.markForCheck(); },
+      next: energyPricing => { this.state.energyPricing = { ...energyPricing, isLoading: false }; this.cdr.markForCheck(); },
       error: () => { this.state.energyPricing = <EnergyPricingData>{ isLoading: false }; this.cdr.markForCheck(); }
     });
   }
@@ -175,5 +175,10 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
   get inverterAvailable(): boolean {
     return this.state.inverter?.isLoaded === true;
+  }
+
+  formatPrice(price: number | null | undefined): string {
+    if (!price) return 'N/A';
+    return Math.floor(price * 100) / 100 + '';
   }
 }
