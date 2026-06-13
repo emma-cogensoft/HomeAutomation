@@ -1,12 +1,14 @@
 #!/bin/bash
-# Runs on the Raspberry Pi via systemd timer.
+# Runs on the Raspberry Pi via systemd timer (as root).
 # Checks GitHub for the latest Pi release, and if newer than what's installed,
-# downloads and deploys it.
+# downloads and deploys it, then (re)launches the app in the desktop session.
 set -e
 
 REPO="emma-cogensoft/HomeAutomation"
 APP_DIR="/opt/homeautomation"
+APP_USER="pi"
 VERSION_FILE="$APP_DIR/.deployed-release"
+LOG_DIR="/var/log/homeautomation"
 
 LATEST_TAG=$(curl -sf "https://api.github.com/repos/$REPO/releases/latest" | grep '"tag_name"' | sed -E 's/.*"tag_name": *"([^"]+)".*/\1/')
 
@@ -33,7 +35,8 @@ trap 'rm -rf "$TMP_DIR"' EXIT
 ASSET_URL="https://github.com/$REPO/releases/download/$LATEST_TAG/homeautomation-desktop-linux-arm.tar.gz"
 curl -sfL "$ASSET_URL" -o "$TMP_DIR/release.tar.gz"
 
-systemctl stop homeautomation
+echo "Stopping running app..."
+pkill -f "$APP_DIR/HomeAutomation.Desktop" || true
 
 # Preserve config that isn't part of the release
 cp "$APP_DIR/appsettings.json" "$TMP_DIR/appsettings.json" 2>/dev/null || true
@@ -46,8 +49,15 @@ if [ -f "$TMP_DIR/appsettings.json" ]; then
 fi
 
 chmod +x "$APP_DIR/HomeAutomation.Desktop"
+chown -R "$APP_USER:$APP_USER" "$APP_DIR"
 echo "$LATEST_TAG" > "$VERSION_FILE"
 
-systemctl start homeautomation
+mkdir -p "$LOG_DIR"
+chown "$APP_USER:$APP_USER" "$LOG_DIR"
+
+echo "Launching app in desktop session..."
+sudo -u "$APP_USER" DISPLAY=:0 XAUTHORITY="/home/$APP_USER/.Xauthority" \
+    "$APP_DIR/HomeAutomation.Desktop" >> "$LOG_DIR/app.log" 2>&1 &
+disown
 
 echo "Deployed $LATEST_TAG"
