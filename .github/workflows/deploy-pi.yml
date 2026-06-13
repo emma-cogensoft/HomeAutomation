@@ -1,4 +1,4 @@
-name: Deploy to Raspberry Pi
+name: Build and Release for Raspberry Pi
 
 on:
   push:
@@ -26,9 +26,11 @@ jobs:
     - name: Run tests
       run: dotnet test --no-build --verbosity normal
 
-  build-and-deploy:
+  build-and-release:
     needs: test
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
 
     steps:
     - uses: actions/checkout@v3
@@ -49,28 +51,13 @@ jobs:
           --self-contained \
           -o ./publish
 
-    - name: Install SSH dependencies
-      run: |
-        sudo apt-get update
-        sudo apt-get install -y openssh-client
+    - name: Package release
+      run: tar -czf homeautomation-desktop-linux-arm.tar.gz -C ./publish .
 
-    - name: Setup SSH key
-      run: |
-        mkdir -p ~/.ssh
-        echo "${{ secrets.PI_SSH_KEY }}" > ~/.ssh/id_deploy
-        chmod 600 ~/.ssh/id_deploy
-        ssh-keyscan -H ${{ secrets.PI_HOST }} >> ~/.ssh/known_hosts 2>/dev/null || true
-
-    - name: Deploy to Pi
-      run: |
-        # Upload the published app
-        scp -i ~/.ssh/id_deploy -r ./publish/* ${{ secrets.PI_USER }}@${{ secrets.PI_HOST }}:/opt/homeautomation/
-
-        # Restart the service
-        ssh -i ~/.ssh/id_deploy ${{ secrets.PI_USER }}@${{ secrets.PI_HOST }} \
-          'sudo systemctl restart homeautomation'
-
-    - name: Verify deployment
-      run: |
-        ssh -i ~/.ssh/id_deploy ${{ secrets.PI_USER }}@${{ secrets.PI_HOST }} \
-          'sudo systemctl status homeautomation'
+    - name: Create release
+      uses: softprops/action-gh-release@v2
+      with:
+        tag_name: pi-${{ github.run_number }}
+        name: Pi build ${{ github.run_number }}
+        files: homeautomation-desktop-linux-arm.tar.gz
+        make_latest: true
