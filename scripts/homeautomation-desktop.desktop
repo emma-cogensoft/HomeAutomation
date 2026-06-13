@@ -1,5 +1,0 @@
-[Desktop Entry]
-Type=Application
-Name=Home Automation Dashboard
-Exec=bash -c "sleep 15 && /opt/homeautomation/HomeAutomation.Desktop >> /var/log/homeautomation/app.log 2>&1"
-X-GNOME-Autostart-enabled=true

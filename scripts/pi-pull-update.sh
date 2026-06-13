@@ -53,7 +53,7 @@ chown -R "$APP_USER:$APP_USER" "$APP_DIR"
 echo "$LATEST_TAG" > "$VERSION_FILE"
 
 mkdir -p "$LOG_DIR"
-chown "$APP_USER:$APP_USER" "$LOG_DIR"
+chown -R "$APP_USER:$APP_USER" "$LOG_DIR"
 
 echo "Launching app in desktop session..."
 sudo -u "$APP_USER" DISPLAY=:0 XAUTHORITY="/home/$APP_USER/.Xauthority" \

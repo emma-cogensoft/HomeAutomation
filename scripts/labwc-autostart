@@ -1,0 +1,12 @@
+#!/bin/bash
+# labwc autostart script - sourced by labwc on session startup.
+# Raspberry Pi OS's default compositor (labwc) does not read XDG
+# ~/.config/autostart/*.desktop files, so the dashboard app is launched here instead.
+
+mkdir -p /var/log/homeautomation
+
+(
+  sleep 15
+  DISPLAY=:0 XAUTHORITY="$HOME/.Xauthority" /opt/homeautomation/HomeAutomation.Desktop \
+    >> /var/log/homeautomation/app.log 2>&1
+) &
