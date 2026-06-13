@@ -1,0 +1,55 @@
+name: Deploy to Raspberry Pi
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: 10.0.x
+
+    - name: Restore dependencies
+      run: dotnet restore
+
+    - name: Publish for ARM32
+      run: |
+        dotnet publish HomeAutomation.Desktop/HomeAutomation.Desktop.csproj \
+          -c Release \
+          -r linux-arm \
+          --self-contained \
+          -o ./publish
+
+    - name: Install SSH dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y openssh-client
+
+    - name: Setup SSH key
+      run: |
+        mkdir -p ~/.ssh
+        echo "${{ secrets.PI_SSH_KEY }}" > ~/.ssh/id_deploy
+        chmod 600 ~/.ssh/id_deploy
+        ssh-keyscan -H ${{ secrets.PI_HOST }} >> ~/.ssh/known_hosts 2>/dev/null || true
+
+    - name: Deploy to Pi
+      run: |
+        # Upload the published app
+        scp -i ~/.ssh/id_deploy -r ./publish/* ${{ secrets.PI_USER }}@${{ secrets.PI_HOST }}:/opt/homeautomation/
+
+        # Restart the service
+        ssh -i ~/.ssh/id_deploy ${{ secrets.PI_USER }}@${{ secrets.PI_HOST }} \
+          'sudo systemctl restart homeautomation'
+
+    - name: Verify deployment
+      run: |
+        ssh -i ~/.ssh/id_deploy ${{ secrets.PI_USER }}@${{ secrets.PI_HOST }} \
+          'sudo systemctl status homeautomation'
