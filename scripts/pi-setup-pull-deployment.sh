@@ -22,10 +22,18 @@ sudo chmod +x "$SCRIPT_DIR/pi-pull-update.sh"
 sudo curl -sfL "$REPO_RAW/homeautomation-update.service" -o /etc/systemd/system/homeautomation-update.service
 sudo curl -sfL "$REPO_RAW/homeautomation-update.timer" -o /etc/systemd/system/homeautomation-update.timer
 
-echo "==> Installing autostart entry for desktop session..."
-AUTOSTART_DIR="/home/${PI_USER}/.config/autostart"
-sudo -u "$PI_USER" mkdir -p "$AUTOSTART_DIR"
-sudo -u "$PI_USER" curl -sfL "$REPO_RAW/homeautomation-desktop.desktop" -o "$AUTOSTART_DIR/homeautomation-desktop.desktop"
+echo "==> Installing labwc autostart entry for desktop session..."
+LABWC_DIR="/home/${PI_USER}/.config/labwc"
+sudo -u "$PI_USER" mkdir -p "$LABWC_DIR"
+sudo -u "$PI_USER" curl -sfL "$REPO_RAW/labwc-autostart" -o "$LABWC_DIR/autostart"
+sudo -u "$PI_USER" chmod +x "$LABWC_DIR/autostart"
+
+echo "==> Removing old XDG autostart entry (not honored by labwc)..."
+sudo -u "$PI_USER" rm -f "/home/${PI_USER}/.config/autostart/homeautomation-desktop.desktop"
+
+echo "==> Ensuring log directory is owned by ${PI_USER}..."
+sudo mkdir -p /var/log/homeautomation
+sudo chown -R "$PI_USER:$PI_USER" /var/log/homeautomation
 
 echo "==> Enabling and starting timer..."
 sudo systemctl daemon-reload
