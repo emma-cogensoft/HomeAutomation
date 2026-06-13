@@ -1,0 +1,150 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:HomeAutomation.Desktop.ViewModels"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="1920" d:DesignHeight="1080"
+        x:Class="HomeAutomation.Desktop.Views.MainWindow"
+        x:DataType="vm:DashboardViewModel"
+        Title="Home Automation Dashboard"
+        WindowStartupLocation="CenterScreen"
+        Background="#0a0e27"
+        Foreground="#ffffff">
+
+    <Design.DataContext>
+        <vm:DashboardViewModel/>
+    </Design.DataContext>
+
+    <StackPanel Spacing="0" Background="#0a0e27">
+        <!-- Loading/Error Bar -->
+        <StackPanel Spacing="0">
+            <ProgressBar IsIndeterminate="{Binding IsLoading}"
+                         Height="8" Background="Transparent" Foreground="#4CAF50"
+                         IsVisible="{Binding IsLoading}"/>
+
+            <Border Background="#d32f2f" Padding="15,10" CornerRadius="0"
+                    IsVisible="{Binding ErrorMessage, Converter={x:Static StringConverters.IsNotNullOrEmpty}}">
+                <TextBlock Text="{Binding ErrorMessage}" Foreground="#ffffff" TextWrapping="Wrap" FontSize="14"/>
+            </Border>
+        </StackPanel>
+
+        <!-- Main Scrollable Content -->
+        <ScrollViewer>
+            <StackPanel Spacing="20" Background="#0a0e27" Margin="20,20,20,20">
+
+                <!-- Header with timestamp -->
+                <StackPanel Spacing="8">
+                    <TextBlock Text="Home Automation" FontSize="36" FontWeight="Bold" Foreground="#ffffff"/>
+                    <TextBlock FontSize="14" Foreground="#888888">
+                        <TextBlock.Text>
+                            <Binding Path="LastUpdated" StringFormat="Last Update: {0:HH:mm:ss}"/>
+                        </TextBlock.Text>
+                    </TextBlock>
+                </StackPanel>
+
+                <!-- Primary Metrics Row: Battery (huge), Weather, Pricing -->
+                <Grid ColumnDefinitions="2*,1*,1*" RowDefinitions="*">
+
+                    <!-- Battery - DOMINANT -->
+                    <Border Grid.Column="0" Background="#1a1f3a" CornerRadius="16" Padding="20,25" Margin="0,0,10,0">
+                        <StackPanel Spacing="12" VerticalAlignment="Center">
+                            <TextBlock Text="BATTERY" FontSize="20" FontWeight="Bold" Foreground="#64b5f6"/>
+
+                            <!-- Battery Percentage -->
+                            <TextBlock Text="{Binding Battery.PercentageCharged}" FontSize="72" FontWeight="Bold"
+                                       Foreground="#4CAF50" LineHeight="65"/>
+                            <TextBlock Text="%" FontSize="32" Foreground="#4CAF50" Margin="0,-12,0,0"/>
+
+                            <!-- Status -->
+                            <TextBlock Text="{Binding Battery.StatusBadge}" FontSize="18" Foreground="#FFC107" Margin="0,6,0,0"/>
+
+                            <!-- Remaining -->
+                            <StackPanel Spacing="4" Margin="0,10,0,0">
+                                <TextBlock Text="REMAINING" FontSize="12" Foreground="#aaa"/>
+                                <TextBlock Text="{Binding Battery.RemainingWh}" FontSize="20" Foreground="#ffffff" FontWeight="Bold"/>
+                            </StackPanel>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Weather -->
+                    <Border Grid.Column="1" Background="#1a1f3a" CornerRadius="16" Padding="15,20" Margin="0,0,10,0">
+                        <StackPanel Spacing="10" VerticalAlignment="Center" HorizontalAlignment="Center">
+                            <TextBlock Text="WEATHER" FontSize="16" FontWeight="Bold" Foreground="#FFC107" TextAlignment="Center"/>
+                            <TextBlock Text="{Binding Weather.WeatherBadge}" FontSize="32" Foreground="#FFC107" TextAlignment="Center"/>
+                            <TextBlock Text="{Binding Weather.WeatherDescription}" FontSize="12" Foreground="#cccccc" TextAlignment="Center"/>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Energy Price -->
+                    <Border Grid.Column="2" Background="#1a1f3a" CornerRadius="16" Padding="15,20">
+                        <StackPanel Spacing="8" VerticalAlignment="Center" HorizontalAlignment="Center">
+                            <TextBlock Text="PRICE" FontSize="16" FontWeight="Bold" Foreground="#FF9800" TextAlignment="Center"/>
+                            <TextBlock Text="{Binding EnergyPricing.CurrentUnitRatePence, StringFormat='0.00'}" FontSize="28" FontWeight="Bold" Foreground="#ffffff" TextAlignment="Center"/>
+                            <TextBlock Text="p/kWh" FontSize="12" Foreground="#FF9800" TextAlignment="Center"/>
+                            <TextBlock Text="{Binding EnergyPricing.PriceStatusBadge}" FontSize="11" Foreground="#FF9800" TextAlignment="Center" Margin="0,3,0,0"/>
+                        </StackPanel>
+                    </Border>
+
+                </Grid>
+
+                <!-- Secondary Metrics Row: Power Flow -->
+                <Grid ColumnDefinitions="*,*,*,*" RowDefinitions="*">
+
+                    <!-- Solar Input -->
+                    <Border Grid.Column="0" Background="#1a1f3a" CornerRadius="16" Padding="15,20" Margin="0,0,10,0">
+                        <StackPanel Spacing="8" VerticalAlignment="Center" HorizontalAlignment="Center">
+                            <TextBlock Text="☀ SOLAR" FontSize="16" FontWeight="Bold" Foreground="#FFC107" TextAlignment="Center"/>
+                            <TextBlock Text="{Binding Battery.SolarInputInW}" FontSize="32" FontWeight="Bold" Foreground="#ffffff" TextAlignment="Center"/>
+                            <TextBlock Text="Watts" FontSize="11" Foreground="#aaa" TextAlignment="Center"/>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Home Usage -->
+                    <Border Grid.Column="1" Background="#1a1f3a" CornerRadius="16" Padding="15,20" Margin="0,0,10,0">
+                        <StackPanel Spacing="8" VerticalAlignment="Center" HorizontalAlignment="Center">
+                            <TextBlock Text="⚡ HOME" FontSize="16" FontWeight="Bold" Foreground="#2196F3" TextAlignment="Center"/>
+                            <TextBlock Text="{Binding Battery.HomeUsageInW}" FontSize="32" FontWeight="Bold" Foreground="#ffffff" TextAlignment="Center"/>
+                            <TextBlock Text="Watts" FontSize="11" Foreground="#aaa" TextAlignment="Center"/>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Feed In -->
+                    <Border Grid.Column="2" Background="#1a1f3a" CornerRadius="16" Padding="15,20" Margin="0,0,10,0">
+                        <StackPanel Spacing="8" VerticalAlignment="Center" HorizontalAlignment="Center">
+                            <TextBlock Text="↗ FEED IN" FontSize="16" FontWeight="Bold" Foreground="#9C27B0" TextAlignment="Center"/>
+                            <TextBlock Text="{Binding Battery.FeedInW}" FontSize="32" FontWeight="Bold" Foreground="#ffffff" TextAlignment="Center"/>
+                            <TextBlock Text="Watts" FontSize="11" Foreground="#aaa" TextAlignment="Center"/>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Inverter Mode -->
+                    <Border Grid.Column="3" Background="#1a1f3a" CornerRadius="16" Padding="15,20">
+                        <StackPanel Spacing="8" VerticalAlignment="Center" HorizontalAlignment="Center">
+                            <TextBlock Text="⚙ MODE" FontSize="16" FontWeight="Bold" Foreground="#9C27B0" TextAlignment="Center"/>
+                            <TextBlock Text="{Binding Inverter.CurrentSettingName}" FontSize="22" FontWeight="Bold" Foreground="#ffffff"
+                                       TextAlignment="Center" TextWrapping="Wrap"/>
+                        </StackPanel>
+                    </Border>
+
+                </Grid>
+
+                <!-- Footer -->
+                <StackPanel Orientation="Horizontal" Spacing="20" Margin="0,10,0,0">
+                    <TextBlock FontSize="11" Foreground="#666666">
+                        <TextBlock.Text>
+                            <Binding Path="Battery.DataSource" StringFormat="Source: {0}"/>
+                        </TextBlock.Text>
+                    </TextBlock>
+                    <TextBlock FontSize="14" Foreground="#666666">
+                        <TextBlock.Text>
+                            <Binding Path="LastUpdated" StringFormat="Updated: {0:HH:mm:ss}"/>
+                        </TextBlock.Text>
+                    </TextBlock>
+                </StackPanel>
+
+            </StackPanel>
+        </ScrollViewer>
+
+    </StackPanel>
+
+</Window>
